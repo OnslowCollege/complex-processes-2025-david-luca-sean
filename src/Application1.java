@@ -55,7 +55,7 @@ public class Application1 {
         productScroll.getViewport().setBackground(Color.white);
         frame.getContentPane().add(productScroll, BorderLayout.WEST);
 
-        //search 
+        //search bar
         headerPanel.add(new Searchbar());
 
 
@@ -76,8 +76,6 @@ public class Application1 {
         infoPanel.setOpaque(false);
 
         //define labels before adding them
-        JLabel textLabel = new JLabel("Apple - $1.50");
-        JLabel cartLabel = new JLabel(new ImageIcon("shopping-cart.png"));
         
         //second product
         productPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 12, 0));
