@@ -3,8 +3,13 @@ import java.awt.*;
 
 public class Product {
 
-    public static void addToPanelWith(String imageFile, String label, JPanel productPanel) {
+    public static void addToPanelWith(String imageFile, String label, JPanel productPanel, int quantity) {
         // image
+        JLabel qtyLabel = new JLabel("Number: " + quantity);
+        qtyLabel.setFont(new Font("Serif", Font.BOLD, 14));
+        qtyLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        productPanel.add(qtyLabel);
+
         ImageIcon icon = new ImageIcon(imageFile); 
         JLabel imageLabel = new JLabel(icon);
         imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -20,7 +25,6 @@ public class Product {
         //infoPanel.add(cartLabel);
         ImageIcon cartIcon = new ImageIcon("SHOPPING-CART-SMALL.JPG");
         JLabel cartLabel = new JLabel(cartIcon);
-
 
         //JLabel cartLabel = new JLabel(new ImageIcon(cartImg));
 

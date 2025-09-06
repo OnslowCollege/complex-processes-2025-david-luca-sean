@@ -33,23 +33,31 @@ public class Searchbar extends JPanel {
 
         // 
         JPanel content = new JPanel(new BorderLayout());
-        content.setBackground(Color.WHITE);
+        content.setBackground(Color.white);
 
         // Top bar with an input and a Search button
         JPanel top = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 8));
-        top.setBackground(Color.BLUE);
+        top.setBackground(Color.blue);
         JLabel qLbl = new JLabel("Search:");
         final JTextField qField = new JTextField(24);
         JButton doSearch = new JButton("Search");
-        doSearch.setBackground(Color.YELLOW);
+        doSearch.setBackground(Color.white);
         top.add(qLbl);
         top.add(qField);
         top.add(doSearch);        
 
         final JTextArea results = new JTextArea();
         results.setEditable(false);
-
+        
         content.add(top, BorderLayout.NORTH);
-        page.getContentPane().add(content, BorderLayout.CENTER);        
+        //an text of found product(just for ui purpose now)
+        page.getContentPane().add(content, BorderLayout.CENTER);     
+        JLabel resultsTitle = new JLabel("Found product:", SwingConstants.CENTER);
+        resultsTitle.setFont(new Font("Serif", Font.BOLD, 16)); 
+        resultsTitle.setForeground(Color.black);
+        page.setVisible(true);
+        //
+
+
     }
 }
