@@ -1,3 +1,6 @@
+//mac os 9
+//package Checkout
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -34,15 +37,17 @@ public class Application1 {
     frame.setResizable(false);
 
     // Step 2: Create a JPanel for the header/logo
-    JPanel headerPanel = new JPanel();
-    headerPanel.setBackground(Color.BLUE);
+    JPanel headerPanel = new JPanel(new BorderLayout());
+    headerPanel.setBackground(Color.blue);
     // Create a label for the header
     JLabel headerLabel = new JLabel(" SIGMABUSTER VIDEO");
-    headerLabel.setForeground(Color.YELLOW); // set text color to yellow
+    headerLabel.setForeground(Color.yellow); // set text color to yellow
     headerLabel.setFont(new Font("Serif", Font.BOLD, 35));
+    headerPanel.add(new Searchbar(), BorderLayout.EAST);
     // Add the label to the header panel
+    frame.getContentPane().add(headerPanel, BorderLayout.NORTH);
     // align the text to the left
-    headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+    //headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
     headerPanel.add(headerLabel);
 
     // add the panel to the frame
@@ -71,13 +76,19 @@ public class Application1 {
       frame.getContentPane().add(productScroll, BorderLayout.WEST);
 
       //search bar
-      headerPanel.add(new Searchbar());
+      //headerPanel.add(new Searchbar());
+
+      //headerPanel.add(headerLabel, BorderLayout.WEST);
+      //headerPanel.add(new Searchbar(), BorderLayout.EAST);
 
 
       //product 1 (apple)
       JPanel applePanel = new JPanel();
       applePanel.setLayout(new BoxLayout(applePanel, BoxLayout.Y_AXIS));
       Product.addToPanelWith("apple.jpg", "Apple - $1.50", applePanel, 1);
+
+      //headerPanel.add(new Searchbar());
+
 
       productPanel.add(applePanel);
     // Step 3: Create a JPanel for the shopping cart
@@ -122,7 +133,7 @@ public class Application1 {
 
       JPanel itemPanel = new JPanel();
       itemPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-      itemPanel.setBackground(Color.LIGHT_GRAY);
+      itemPanel.setBackground(Color.lightGray);
       itemPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.BLACK));
       itemPanel.setMaximumSize(new Dimension(200, 25));
 
@@ -182,15 +193,17 @@ public class Application1 {
 
         /* CHECKOUT HEADER */
         JPanel checkoutHeaderPanel = new JPanel();
-        checkoutHeaderPanel.setBackground(Color.BLUE);
+        checkoutHeaderPanel.setBackground(Color.blue);
         // Create a label for the header
         JLabel checkoutHeaderLabel = new JLabel(" SIGMABUSTER CHECKOUT");
-        checkoutHeaderLabel.setForeground(Color.YELLOW); // set text color to yellow
+        checkoutHeaderLabel.setForeground(Color.yellow); // set text color to yellow
         checkoutHeaderLabel.setFont(new Font("Serif", Font.BOLD, 27));
         // Add the label to the header panel
         // align the text to the left
-        checkoutHeaderPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        checkoutHeaderPanel.add(checkoutHeaderLabel);
+        headerPanel.setLayout(new BorderLayout());
+        headerPanel.add(headerLabel, BorderLayout.WEST);   
+        headerPanel.add(new Searchbar(), BorderLayout.EAST);
+
 
         // add a history of products panel
         JPanel historyPanel = new JPanel();
