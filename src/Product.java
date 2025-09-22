@@ -1,6 +1,7 @@
 //package Checkout
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 
 public class Product {
 
@@ -25,7 +26,7 @@ public class Product {
         //int cartHeight = icon.getIconHeight() / 10;
         //infoPanel.add(cartLabel);
         ImageIcon cartIcon = new ImageIcon("SHOPPING-CART-SMALL.JPG");
-        JButton cartLabel = new JButton(cartIcon);
+        JButton cartButtton = new JButton(cartIcon);
 
         //JLabel cartLabel = new JLabel(new ImageIcon(cartImg));
 
@@ -36,8 +37,15 @@ public class Product {
         infoPanel.setAlignmentX(Component.CENTER_ALIGNMENT); 
 
         infoPanel.add(textLabel);
-        infoPanel.add(cartLabel);
+        infoPanel.add(cartButtton);
 
         productPanel.add(infoPanel);
+
+        cartButtton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Call the helper inside Application1 to update the cart and UI
+                Application1.addToCart(name, price, quantity);
+            }
+        });
     }
 }

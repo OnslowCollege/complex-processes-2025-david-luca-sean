@@ -15,6 +15,10 @@ import java.util.Enumeration;
 
 
 public class Application1 {
+  public static JPanel cartPanelRef;
+  public static JLabel cartLabelRef;
+  public static JLabel totalLabelRef;
+
 
   // ArrayList to hold cart items
   public static Vector cartItemList = new Vector();
@@ -63,12 +67,6 @@ public class Application1 {
         //pannel that I could add iamge 
     JPanel productPanel = new JPanel() {
 
-      public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        java.awt.Dimension d = this.size();   // 1.1-safe
-        g.setColor(Color.white);
-        g.fillRect(0, 0, d.width, d.height);
-    }
   };
         
       productPanel.setLayout(new BoxLayout(productPanel, BoxLayout.Y_AXIS));
@@ -115,6 +113,9 @@ public class Application1 {
     // set the label to be centered
     cartLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
     cartPanel.add(cartLabel);
+    
+    Application1.cartPanelRef = cartPanel;
+    Application1.cartLabelRef = cartLabel;
 
     // test items in the cart
     CartItem item1 = new CartItem("placeholder 1", 9.99, 1);
@@ -193,6 +194,7 @@ public class Application1 {
     // move the button to the bottom of the panel
     cartPanel.add(Box.createVerticalGlue());
     cartPanel.add(totalLabel);
+    Application1.totalLabelRef = totalLabel;
     cartPanel.add(checkoutButton);
     checkoutButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
@@ -347,7 +349,55 @@ public class Application1 {
     frame.setVisible(true);
 
   }
+  //for calculating the total price of product
+  private static double calculatetotal() {
+    double sum = 0.0;
+    for (int i = 0; i < cartItemList.size(); ) {
+      CartItem c = (CartItem) cartItemList.elementAt(i);
+      sum += c.getTotalPrice();
+      i = i +1;
+    }
+    return sum;
+  }
+  
 
+  public static void addToCart(String name, double price, int quantity) {
+    //create a new cart item and add it to the list
+    final CartItem newItem = new CartItem(name, price, quantity);
+    cartItemList.addElement(newItem);
+
+    //build a row for cart
+    final JPanel itemPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    itemPanel.setBackground(Color.lightGray);
+    itemPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.black));
+    itemPanel.setMaximumSize(new Dimension(200, 25));
+
+    JLabel itemLabel = new JLabel(newItem.getDetails());
+    itemLabel.setFont(new Font("Serif", Font.PLAIN, 12));
+    final JButton removeButton = new JButton("X");
+
+    itemPanel.add(itemLabel);
+    itemPanel.add(removeButton);
+    cartPanelRef.add(itemPanel);
+    
+
+    //update labels
+    cartLabelRef.setText("Shopping Cart(" + cartItemList.size() + ")");
+    totalLabelRef.setText("Total: $" + calculatetotal());
+
+    //refresh the ui
+    cartPanelRef.validate();
+    cartPanelRef.repaint();
+
+    //remove button
+    /* 
+
+      }
+    });
+  }
+        */ 
+
+  }
 }
 
 class CartItem extends ProductItem {
@@ -367,6 +417,7 @@ class CartItem extends ProductItem {
     return price * quantity;
   }
 }
+
 
 /* ProductItem class */
 abstract class ProductItem {
