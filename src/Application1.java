@@ -20,6 +20,7 @@ public class Application1 {
   public static JLabel totalLabelRef;
   public static Component cartGlueRef;
 
+  public static int orderNumber = 1;
 
   // ArrayList to hold cart items
   public static Vector cartItemList = new Vector();
@@ -189,6 +190,7 @@ public class Application1 {
 
     // create a button to go to checkout
     JButton checkoutButton = new JButton("Go to Checkout ->");
+    
     checkoutButton.setFont(new Font("Serif", Font.BOLD, 20));
     // set the button to be centered
     checkoutButton.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -214,6 +216,14 @@ public class Application1 {
         });
         checkoutFrame.setSize(560, 400);
         checkoutFrame.getContentPane().setLayout(new BorderLayout());
+        //purchase history
+        Vector saleHistoryItemList = new Vector();
+        for (int i = 0; i < cartItemList.size(); i = i + 1) {
+          saleHistoryItemList.addElement(cartItemList.elementAt(i));
+          }
+        String orderKey = "Order " + orderNumber + " - " + totalLabel.getText();
+        saleHistory.put(orderKey, saleHistoryItemList);
+        orderNumber = orderNumber + 1;
 
         /* CHECKOUT HEADER */
         JPanel checkoutHeaderPanel = new JPanel();
@@ -303,6 +313,7 @@ public class Application1 {
               // create a new ArrayList to hold the sale history items
               // copy the cart items to the sale history because the cartItemList is cleared
               // later
+              /* 
               // add the cart items and total price to the sale history
               Vector saleHistoryItemList = new Vector();
               for (int i = 0; i < cartItemList.size(); i = i + 1) {
@@ -313,7 +324,7 @@ public class Application1 {
               
               checkoutFrame.dispose();
               cartItemList.removeAllElements();
-              
+               */
               // reset the cart
               cartItemList.removeAllElements();
               totalLabel.setText("Total: $0.00");
