@@ -18,6 +18,7 @@ public class Application1 {
   public static JPanel cartPanelRef;
   public static JLabel cartLabelRef;
   public static JLabel totalLabelRef;
+  public static Component cartGlueRef;
 
 
   // ArrayList to hold cart items
@@ -378,8 +379,9 @@ public class Application1 {
 
     itemPanel.add(itemLabel);
     itemPanel.add(removeButton);
-    cartPanelRef.add(itemPanel);
-    
+    int insertIndex = Math.max(0, cartPanelRef.getComponentCount() - 2);
+    cartPanelRef.add(itemPanel, insertIndex);
+        
 
     //update labels
     cartLabelRef.setText("Shopping Cart(" + cartItemList.size() + ")");
@@ -389,17 +391,19 @@ public class Application1 {
     cartPanelRef.validate();
     cartPanelRef.repaint();
 
-    //remove button
-    /* 
-
+    removeButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent e) {
+        cartItemList.removeElement(newItem);
+        cartPanelRef.remove(itemPanel);
+        cartLabelRef.setText("Shopping Cart(" + cartItemList.size() + ")");
+        totalLabelRef.setText("Total: $" + calculatetotal());
+        cartPanelRef.validate();
+        cartPanelRef.repaint();
       }
     });
   }
-        */ 
 
   }
-}
-
 class CartItem extends ProductItem {
   int quantity; // quantity of the item in the cart
   // to represent an item in the shopping cart
