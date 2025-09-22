@@ -5,21 +5,26 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.Vector;
+import java.util.Hashtable;
+//import java.util.Map;
+//import java.util.Set;
+//import java.util.ArrayList;
+import java.util.Enumeration;
+//import java.util.HashMap;
+
 
 public class Application1 {
 
   // ArrayList to hold cart items
-  public static ArrayList cartItemList = new ArrayList();
+  public static Vector cartItemList = new Vector();
   private static int itemCount = cartItemList.size(); // item counter for shopping cart
 
   public static void main(String[] args) {
     // Hashmap to store sale history
-    Map saleHistory = new HashMap();
+    //Map saleHistory = new HashMap();
+    final Hashtable saleHistory = new Hashtable();
+
 
     /*
      * SOURCE JFRAME
@@ -28,12 +33,14 @@ public class Application1 {
      */
     // Step 1: Create a new JFrame (window)
     JFrame frame = new JFrame("SIGMABUSTER VIDEO .inc");
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.addWindowListener(new java.awt.event.WindowAdapter() {
+      public void windowClosing(java.awt.event.WindowEvent e) { System.exit(0); }
+    });
     frame.setSize(640, 480);
     // frame is divded into NORTH, SOUTH, EAST, WEST and CENTER
     frame.getContentPane().setLayout(new BorderLayout());
     // centre the frame on the screen
-    frame.setLocationRelativeTo(null);
+    //frame.setLocationRelativeTo(null);
     frame.setResizable(false);
 
     // Step 2: Create a JPanel for the header/logo
@@ -51,17 +58,19 @@ public class Application1 {
     headerPanel.add(headerLabel);
 
     // add the panel to the frame
-    frame.getContentPane().add(headerPanel, BorderLayout.NORTH);
+    //frame.getContentPane().add(headerPanel, BorderLayout.NORTH);
 
         //pannel that I could add iamge 
-        JPanel productPanel = new JPanel() {
-          public void paintComponent(Graphics g) {
-              super.paintComponent(g);
-              //fill white back ground
-              g.setColor(Color.white);
-              g.fillRect(0, 0, getWidth(), getHeight());
-          }
-      };
+    JPanel productPanel = new JPanel() {
+
+      public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        java.awt.Dimension d = this.size();   // 1.1-safe
+        g.setColor(Color.white);
+        g.fillRect(0, 0, d.width, d.height);
+    }
+  };
+        
       productPanel.setLayout(new BoxLayout(productPanel, BoxLayout.Y_AXIS));
       productPanel.setPreferredSize(new Dimension(200, 200));
 
@@ -84,25 +93,24 @@ public class Application1 {
 
       //product 1 (apple)
       JPanel applePanel = new JPanel();
-      applePanel.setLayout(new BoxLayout(applePanel, BoxLayout.Y_AXIS));
-      Product.addToPanelWith("apple.jpg", "Apple - $1.50", applePanel, 1);
+      applePanel.setLayout(new BoxLayout(applePanel,BoxLayout.Y_AXIS));
+      Product.addToPanelWith("apple.jpg", "Apple",1.50,applePanel,1);
 
       //headerPanel.add(new Searchbar());
 
-
       productPanel.add(applePanel);
     // Step 3: Create a JPanel for the shopping cart
-    JPanel cartPanel = new JPanel();
-    cartPanel.setBackground(Color.LIGHT_GRAY);
+    final JPanel cartPanel = new JPanel();
+    cartPanel.setBackground(Color.white);
     // create a border around the panel
-    cartPanel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 8));
+    cartPanel.setBorder(BorderFactory.createLineBorder(Color.blue, 8));
     // set preferred size for the shopping cart panel
     cartPanel.setPreferredSize(new Dimension(200, 250));
 
     // setting the layout
     cartPanel.setLayout(new BoxLayout(cartPanel, BoxLayout.Y_AXIS));
     // Create a label for the shopping cart
-    JLabel cartLabel = new JLabel("Shopping Cart(" + itemCount + ")");
+    final JLabel cartLabel = new JLabel("Shopping Cart(" + itemCount + ")");
     cartLabel.setFont(new Font("Serif", Font.BOLD, 15));
     // set the label to be centered
     cartLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -111,6 +119,15 @@ public class Application1 {
     // test items in the cart
     CartItem item1 = new CartItem("placeholder 1", 9.99, 1);
     CartItem item2 = new CartItem("placeholder 2", 19.99, 2);
+
+    //itemCount = cartItemList.size();
+    //cartLabel.setText("Shopping Cart(" + itemCount + ")");
+    //cartItemList.addElement(item1);
+    //cartItemList.addElement(item2);
+    
+    itemCount = cartItemList.size();
+    cartLabel.setText("Shopping Cart(" + itemCount + ")");
+    
 
     // add items to the cart panel
 
@@ -122,19 +139,19 @@ public class Application1 {
     itemLabel2.setAlignmentX(Component.CENTER_ALIGNMENT);
     itemLabel2.setFont(new Font("Serif", Font.PLAIN, 15));
 
-    cartItemList.add(item1);
-    cartItemList.add(item2);
+    cartItemList.addElement(item1);
+    cartItemList.addElement(item2);    
 
     // adding items into the cart panel
     // for every item in the cart, add it to the cart panel
     for (int i = 0; i < cartItemList.size(); i++) {
-      CartItem item = (CartItem) cartItemList.get(i);
+      CartItem item=(CartItem)cartItemList.elementAt(i);
       final CartItem currentItem = item; // final variable for the action listener
 
-      JPanel itemPanel = new JPanel();
+      final JPanel itemPanel = new JPanel();
       itemPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
       itemPanel.setBackground(Color.lightGray);
-      itemPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.BLACK));
+      itemPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.black));
       itemPanel.setMaximumSize(new Dimension(200, 25));
 
       JLabel itemLabel = new JLabel(item.getDetails());
@@ -151,18 +168,20 @@ public class Application1 {
       removeButton.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
           // remove the item from the cart
-          cartItemList.remove(currentItem);
+          cartItemList.removeElement(currentItem);
           cartPanel.remove(itemPanel);
-          cartPanel.revalidate();
+          cartPanel.validate();
           cartPanel.repaint();
-          itemCount--; // decrement the item count
+          //itemCount--; // decrement the item count
+          itemCount = cartItemList.size();
+          cartLabel.setText("Shopping Cart(" + itemCount + ")");
         }
       });
 
     }
 
     // create a label to show total price
-    JLabel totalLabel = new JLabel("Total: $" + (item1.getTotalPrice() + item2.getTotalPrice()));
+    final JLabel totalLabel = new JLabel("Total: $" + (item1.getTotalPrice() + item2.getTotalPrice()));
     totalLabel.setFont(new Font("Serif", Font.BOLD, 15));
     totalLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -186,8 +205,10 @@ public class Application1 {
          * There will also be a history of past purchases on the right side
          */
         // opens up a new window for checkout
-        JFrame checkoutFrame = new JFrame("Checkout");
-        checkoutFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        final JFrame checkoutFrame = new JFrame("Checkout");
+        checkoutFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+          public void windowClosing(java.awt.event.WindowEvent e) { checkoutFrame.dispose(); }
+        });
         checkoutFrame.setSize(560, 400);
         checkoutFrame.getContentPane().setLayout(new BorderLayout());
 
@@ -200,44 +221,43 @@ public class Application1 {
         checkoutHeaderLabel.setFont(new Font("Serif", Font.BOLD, 27));
         // Add the label to the header panel
         // align the text to the left
-        headerPanel.setLayout(new BorderLayout());
-        headerPanel.add(headerLabel, BorderLayout.WEST);   
-        headerPanel.add(new Searchbar(), BorderLayout.EAST);
-
-
+        checkoutHeaderPanel.setLayout(new BorderLayout());
+        checkoutHeaderPanel.add(checkoutHeaderLabel, BorderLayout.WEST);
+        {
+          JPanel sb = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+          sb.add(new JLabel("Search:"));
+          sb.add(new JTextField(12));
+          checkoutHeaderPanel.add(sb, BorderLayout.EAST);
+        }
+        
         // add a history of products panel
         JPanel historyPanel = new JPanel();
         historyPanel.setLayout(new BoxLayout(historyPanel, BoxLayout.Y_AXIS));
-        historyPanel.setBackground(Color.LIGHT_GRAY);
+        historyPanel.setBackground(Color.lightGray);
         historyPanel.setPreferredSize(new Dimension(200, 400));
-        historyPanel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 8));
+        historyPanel.setBorder(BorderFactory.createLineBorder(Color.blue, 8));
         JLabel historyLabel = new JLabel("Purchase History");
         historyPanel.add(historyLabel);
         historyLabel.setFont(new Font("Serif", Font.BOLD, 15));
         historyLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // iterate through the sale history and add it to the history panel
-        Set entrySet = saleHistory.entrySet();
-        Iterator iterator = entrySet.iterator();
-
-        while (iterator.hasNext()) {
-          Map.Entry entry = (Map.Entry) iterator.next();
-          Object key = entry.getKey(); // total price
-          Object value = entry.getValue(); // cart item list
+        for (Enumeration keys = saleHistory.keys(); keys.hasMoreElements(); ) {
+          Object key = keys.nextElement();                 
+          Object value = saleHistory.get(key);              
           System.out.println(value);
-          JLabel historyItemLabel = new JLabel(key + value.toString());
+          JLabel historyItemLabel = new JLabel(String.valueOf(key) + String.valueOf(value));
           historyItemLabel.setFont(new Font("Serif", Font.PLAIN, 12));
           historyItemLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
           historyPanel.add(historyItemLabel);
-        }
+        }        
 
         // create a checkout panel
         JPanel checkoutPanel = new JPanel();
         checkoutPanel.setLayout(new BoxLayout(checkoutPanel, BoxLayout.Y_AXIS));
-        checkoutPanel.setBackground(Color.WHITE);
+        checkoutPanel.setBackground(Color.white);
         // create a border around the panel
-        checkoutPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 10));
+        checkoutPanel.setBorder(BorderFactory.createLineBorder(Color.lightGray, 10));
         // Create a label for the checkout
         JLabel checkoutLabel = new JLabel("YOUR CART");
         checkoutLabel.setFont(new Font("Serif", Font.BOLD, 15));
@@ -246,7 +266,7 @@ public class Application1 {
 
         // add items in the cart to the checkout panel
         for (int i = 0; i < cartItemList.size(); i++) {
-          CartItem item = (CartItem) cartItemList.get(i);
+          CartItem item = (CartItem) cartItemList.elementAt(i);
           JLabel itemLabel = new JLabel(item.getDetails());
           itemLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
           itemLabel.setFont(new Font("Serif", Font.PLAIN, 12));
@@ -280,13 +300,23 @@ public class Application1 {
               // create a new ArrayList to hold the sale history items
               // copy the cart items to the sale history because the cartItemList is cleared
               // later
-              ArrayList saleHistoryItemList = new ArrayList(cartItemList);
               // add the cart items and total price to the sale history
+              Vector saleHistoryItemList = new Vector();
+              for (int i = 0; i < cartItemList.size(); i = i + 1) {
+                  saleHistoryItemList.addElement(cartItemList.elementAt(i));
+              }
               saleHistory.put(totalLabel.getText(), saleHistoryItemList);
-              checkoutFrame.dispose(); // close the checkout window
+              
+              
+              checkoutFrame.dispose();
+              cartItemList.removeAllElements();
+              
               // reset the cart
-              cartItemList.clear();
+              cartItemList.removeAllElements();
               totalLabel.setText("Total: $0.00");
+              itemCount = 0;
+              cartLabel.setText("Shopping Cart(0)");
+
               itemCount = 0; // reset the item count
             }
           }
@@ -302,7 +332,10 @@ public class Application1 {
         checkoutFrame.getContentPane().add(checkoutPanel, BorderLayout.CENTER);
         checkoutFrame.getContentPane().add(historyPanel, BorderLayout.EAST);
         // centre the frame on the screen
-        checkoutFrame.setLocationRelativeTo(null);
+        { java.awt.Dimension scr = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+          checkoutFrame.setLocation((scr.width - checkoutFrame.getWidth())/2,
+                                    (scr.height - checkoutFrame.getHeight())/2);
+        }
         checkoutFrame.setResizable(false);
         checkoutFrame.setVisible(true);
       }
@@ -364,7 +397,7 @@ abstract class ProductItem {
   public void addToCart(int quantity) {
     // create a new CartItem and add it to the cart
     CartItem newItem = new CartItem(name, price, quantity);
-    Application1.cartItemList.add(newItem);
+    Application1.cartItemList.addElement(newItem);
     // change the quantity of the product
     this.inStore -= quantity;
 

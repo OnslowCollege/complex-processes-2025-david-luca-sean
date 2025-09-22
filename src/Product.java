@@ -4,7 +4,7 @@ import java.awt.*;
 
 public class Product {
 
-    public static void addToPanelWith(String imageFile, String label, JPanel productPanel, int quantity) {
+    public static void addToPanelWith(String imageFile, String name, double price, JPanel productPanel, int quantity) {
         // image
         JLabel qtyLabel = new JLabel("Number: " + quantity);
         qtyLabel.setFont(new Font("Serif", Font.BOLD, 14));
@@ -17,7 +17,7 @@ public class Product {
         productPanel.add(imageLabel);
 
         //text
-        JLabel textLabel = new JLabel(label);
+        JLabel textLabel = new JLabel(name + " - $" + price);
         textLabel.setFont(new Font("Serif", Font.PLAIN, 16));
 
         //scale cart to 10% of the product 
@@ -25,9 +25,10 @@ public class Product {
         //int cartHeight = icon.getIconHeight() / 10;
         //infoPanel.add(cartLabel);
         ImageIcon cartIcon = new ImageIcon("SHOPPING-CART-SMALL.JPG");
-        JLabel cartLabel = new JLabel(cartIcon);
+        JButton cartLabel = new JButton(cartIcon);
 
         //JLabel cartLabel = new JLabel(new ImageIcon(cartImg));
+
 
         //info panel
         JPanel infoPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
