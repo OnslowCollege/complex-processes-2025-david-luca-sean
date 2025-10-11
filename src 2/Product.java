@@ -1,15 +1,12 @@
-//package Checkout;
+//package Checkout
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
 public class Product {
 
-    public static void addToPanelWith(final String imageFile,
-    final String name,
-    final double price,
-    final JPanel productPanel,
-    final int quantity) {        
+    public static void addToPanelWith(String imageFile, String name, double price, JPanel productPanel, int quantity) {
+        // image
         JLabel qtyLabel = new JLabel("Number: " + quantity);
         qtyLabel.setFont(new Font("Serif", Font.BOLD, 14));
         qtyLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -46,6 +43,7 @@ public class Product {
 
         cartButtton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                // Call the helper inside Application1 to update the cart and UI
                 Application1.addToCart(name, price, quantity);
             }
         });

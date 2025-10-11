@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
 import java.util.Hashtable;
-import java.sql.*;
 //import java.util.Map;
 //import java.util.Set;
 //import java.util.ArrayList;
@@ -100,11 +99,7 @@ public class Application1 {
       //headerPanel.add(new Searchbar());
 
       productPanel.add(applePanel);
-      productPanel.revalidate();
-      productPanel.repaint();
-      frame.validate();   
-      frame.setVisible(true);
-
+    // Step 3: Create a JPanel for the shopping cart
     final JPanel cartPanel = new JPanel();
     cartPanel.setBackground(Color.white);
     // create a border around the panel
@@ -350,13 +345,11 @@ public class Application1 {
         checkoutFrame.getContentPane().add(checkoutHeaderPanel, BorderLayout.NORTH);
         checkoutFrame.getContentPane().add(checkoutPanel, BorderLayout.CENTER);
         checkoutFrame.getContentPane().add(historyPanel, BorderLayout.EAST);
-        /* 
         // centre the frame on the screen
         { java.awt.Dimension scr = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
           checkoutFrame.setLocation((scr.width - checkoutFrame.getWidth())/2,
                                     (scr.height - checkoutFrame.getHeight())/2);
         }
-          */
         checkoutFrame.setResizable(false);
         checkoutFrame.setVisible(true);
       }
@@ -476,5 +469,3 @@ abstract class ProductItem {
 
   }
 }
-
-
