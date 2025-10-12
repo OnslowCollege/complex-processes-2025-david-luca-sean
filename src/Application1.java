@@ -222,6 +222,7 @@ public class Application1 {
         checkoutFrame.setSize(560, 400);
         checkoutFrame.getContentPane().setLayout(new BorderLayout());
         //purchase history
+        /* 
         Vector saleHistoryItemList = new Vector();
         for (int i = 0; i < cartItemList.size(); i = i + 1) {
           saleHistoryItemList.addElement(cartItemList.elementAt(i));
@@ -229,7 +230,7 @@ public class Application1 {
         String orderKey = "Order " + orderNumber + " - " + totalLabel.getText();
         saleHistory.put(orderKey, saleHistoryItemList);
         orderNumber = orderNumber + 1;
-
+         */
         /* CHECKOUT HEADER */
         JPanel checkoutHeaderPanel = new JPanel();
         checkoutHeaderPanel.setBackground(Color.blue);
@@ -249,17 +250,21 @@ public class Application1 {
         }
         
         // add a history of products panel
-        JPanel historyPanel = new JPanel();
+        final JPanel historyPanel = new JPanel();
         historyPanel.setLayout(new BoxLayout(historyPanel, BoxLayout.Y_AXIS));
         historyPanel.setBackground(Color.lightGray);
         historyPanel.setPreferredSize(new Dimension(200, 400));
         historyPanel.setBorder(BorderFactory.createLineBorder(Color.blue, 8));
-        JLabel historyLabel = new JLabel("Purchase History");
-        historyPanel.add(historyLabel);
+        final JLabel historyLabel = new JLabel("Purchase History");
         historyLabel.setFont(new Font("Serif", Font.BOLD, 15));
         historyLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        // iterate through the sale history and add it to the history panel
+        //clear the pannel
+        historyPanel.removeAll();
+        historyPanel.add(historyLabel);
+        //historyPanel.add(historyLabel);
+        //historyLabel.setFont(new Font("Serif", Font.BOLD, 15));
+        //historyLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        /* 
         for (Enumeration keys = saleHistory.keys(); keys.hasMoreElements(); ) {
           Object key = keys.nextElement();                 
           Object value = saleHistory.get(key);              
@@ -268,7 +273,8 @@ public class Application1 {
           historyItemLabel.setFont(new Font("Serif", Font.PLAIN, 12));
           historyItemLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
           historyPanel.add(historyItemLabel);
-        }        
+        } 
+          */        
 
         // create a checkout panel
         JPanel checkoutPanel = new JPanel();
@@ -330,6 +336,30 @@ public class Application1 {
               checkoutFrame.dispose();
               cartItemList.removeAllElements();
                */
+              Vector saleHistoryItemList = new Vector();
+              for (int i = 0; i < cartItemList.size(); i++) {
+                saleHistoryItemList.addElement(cartItemList.elementAt(i));
+              }
+              String orderKey = "Order " + orderNumber + " - " + totalLabel.getText();
+              saleHistory.put(orderKey, saleHistoryItemList);
+              orderNumber++;
+          
+              //redraw the history panel
+              historyPanel.removeAll();
+              historyPanel.add(historyLabel); 
+          
+              for (Enumeration keys = saleHistory.keys(); keys.hasMoreElements();) {
+                Object key = keys.nextElement();
+                Object value = saleHistory.get(key);
+                JLabel historyItemLabel = new JLabel(String.valueOf(key) + String.valueOf(value));
+                historyItemLabel.setFont(new Font("Serif", Font.PLAIN, 12));
+                historyItemLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                historyPanel.add(historyItemLabel);
+              }
+              //checkoutFrame.getContentPane().add(historyPanel, BorderLayout.EAST);
+              checkoutFrame.validate();
+              checkoutFrame.repaint();
+          
               // reset the cart
               cartItemList.removeAllElements();
               totalLabel.setText("Total: $0.00");
@@ -350,6 +380,7 @@ public class Application1 {
         checkoutFrame.getContentPane().add(checkoutHeaderPanel, BorderLayout.NORTH);
         checkoutFrame.getContentPane().add(checkoutPanel, BorderLayout.CENTER);
         checkoutFrame.getContentPane().add(historyPanel, BorderLayout.EAST);
+        //historyPanel.setVisible(false);
         /* 
         // centre the frame on the screen
         { java.awt.Dimension scr = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
