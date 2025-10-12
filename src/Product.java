@@ -28,9 +28,11 @@ public class Product {
         //int cartWidth = icon.getIconWidth() / 10;
         //int cartHeight = icon.getIconHeight() / 10;
         //infoPanel.add(cartLabel);
-        ImageIcon cartIcon = new ImageIcon("SHOPPING-CART-SMALL.JPG");
-        JButton cartButtton = new JButton(cartIcon);
-
+        ImageIcon cartIcon = new ImageIcon("cart.jpg");
+        Image original = cartIcon.getImage();
+        Image scaled = original.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        ImageIcon smallCartIcon = new ImageIcon(scaled);
+        JButton cartButtton = new JButton(smallCartIcon);
         //JLabel cartLabel = new JLabel(new ImageIcon(cartImg));
 
 

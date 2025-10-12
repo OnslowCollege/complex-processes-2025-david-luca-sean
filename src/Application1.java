@@ -481,7 +481,7 @@ class CartItem extends ProductItem {
   public double getTotalPrice() {
     return price * quantity;
   }
-  @Override
+  //@Override
   public String toString() {
     return name + " - $" + price + " x " + quantity;
 }
