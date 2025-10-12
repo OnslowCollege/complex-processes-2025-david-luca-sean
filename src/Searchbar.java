@@ -11,7 +11,7 @@ public class Searchbar extends JPanel {
         setOpaque(false);
         setLayout(new FlowLayout(FlowLayout.RIGHT, 6, 0));
         //the search field that allow user to enter stuff
-        searchField = new JTextField("Search", 18);
+        searchField = new JTextField("", 18);
         //button for entering the search 
         goButton = new JButton("Enter");
         //open the search page when button is clicked.
@@ -39,11 +39,9 @@ public class Searchbar extends JPanel {
         // Top bar with an input and a Search button
         JPanel top = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 8));
         top.setBackground(Color.blue);
-        JLabel qLbl = new JLabel("Search:");
         final JTextField qField = new JTextField(24);
         JButton doSearch = new JButton("Search");
         doSearch.setBackground(Color.white);
-        top.add(qLbl);
         top.add(qField);
         top.add(doSearch);        
 

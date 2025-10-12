@@ -242,13 +242,15 @@ public class Application1 {
         // align the text to the left
         checkoutHeaderPanel.setLayout(new BorderLayout());
         checkoutHeaderPanel.add(checkoutHeaderLabel, BorderLayout.WEST);
+        /* 
         {
           JPanel sb = new JPanel(new FlowLayout(FlowLayout.RIGHT));
           sb.add(new JLabel("Search:"));
           sb.add(new JTextField(12));
           checkoutHeaderPanel.add(sb, BorderLayout.EAST);
         }
-        
+        */
+        checkoutHeaderPanel.add(new Searchbar(), BorderLayout.EAST);
         // add a history of products panel
         final JPanel historyPanel = new JPanel();
         historyPanel.setLayout(new BoxLayout(historyPanel, BoxLayout.Y_AXIS));
@@ -350,15 +352,25 @@ public class Application1 {
           
               for (Enumeration keys = saleHistory.keys(); keys.hasMoreElements();) {
                 Object key = keys.nextElement();
-                Object value = saleHistory.get(key);
-                JLabel historyItemLabel = new JLabel(String.valueOf(key) + String.valueOf(value));
-                historyItemLabel.setFont(new Font("Serif", Font.PLAIN, 12));
-                historyItemLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-                historyPanel.add(historyItemLabel);
-              }
-              //checkoutFrame.getContentPane().add(historyPanel, BorderLayout.EAST);
-              checkoutFrame.validate();
-              checkoutFrame.repaint();
+                Vector items = (Vector) saleHistory.get(key);
+            
+                StringBuffer sb = new StringBuffer();
+                sb.append(String.valueOf(key)).append("\n");
+            
+                for (int i = 0; i < items.size(); i++) {
+                    sb.append(" • ").append(items.elementAt(i).toString()).append("\n");
+                }
+            
+                JTextArea area = new JTextArea(sb.toString());
+                area.setEditable(false);
+                area.setOpaque(false);
+                area.setFont(new Font("Serif", Font.PLAIN, 12));
+            
+                historyPanel.add(area);
+            }
+            
+            historyPanel.revalidate();
+            historyPanel.repaint();
           
               // reset the cart
               cartItemList.removeAllElements();
@@ -469,6 +481,10 @@ class CartItem extends ProductItem {
   public double getTotalPrice() {
     return price * quantity;
   }
+  @Override
+  public String toString() {
+    return name + " - $" + price + " x " + quantity;
+}
 }
 
 
