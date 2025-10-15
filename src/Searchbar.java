@@ -1,4 +1,4 @@
-//package Checkout
+//package Checkout;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;

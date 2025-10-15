@@ -1,5 +1,5 @@
 //mac os 9
-//package Checkout
+//package Checkout;
 
 import javax.swing.*;
 import java.awt.*;
@@ -125,8 +125,8 @@ public class Application1 {
     Application1.cartLabelRef = cartLabel;
 
     // test items in the cart
-    CartItem item1 = new CartItem("placeholder 1", 9.99, 1);
-    CartItem item2 = new CartItem("placeholder 2", 19.99, 2);
+   //CartItem item1 = new CartItem("placeholder 1", 9.99, 1);
+    //CartItem item2 = new CartItem("placeholder 2", 19.99, 2);
 
     //itemCount = cartItemList.size();
     //cartLabel.setText("Shopping Cart(" + itemCount + ")");
@@ -138,7 +138,7 @@ public class Application1 {
     
 
     // add items to the cart panel
-
+/* 
     // this is hardcoded for now, until I add the products
     JLabel itemLabel1 = new JLabel(item1.getDetails());
     itemLabel1.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -149,6 +149,7 @@ public class Application1 {
 
     cartItemList.addElement(item1);
     cartItemList.addElement(item2);    
+    */
 
     // adding items into the cart panel
     // for every item in the cart, add it to the cart panel
@@ -189,7 +190,7 @@ public class Application1 {
     }
 
     // create a label to show total price
-    final JLabel totalLabel = new JLabel("Total: $" + (item1.getTotalPrice() + item2.getTotalPrice()));
+    final JLabel totalLabel = new JLabel("Total: $" + calculatetotal());
     totalLabel.setFont(new Font("Serif", Font.BOLD, 15));
     totalLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -221,6 +222,11 @@ public class Application1 {
         });
         checkoutFrame.setSize(560, 400);
         checkoutFrame.getContentPane().setLayout(new BorderLayout());
+        //size the check out screen
+        java.awt.Dimension scr = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        int w = (scr.width  * 5) / 10;   
+        int h = (scr.height * 5) / 10;   
+        checkoutFrame.setSize(w, h);
         //purchase history
         /* 
         Vector saleHistoryItemList = new Vector();
@@ -323,7 +329,16 @@ public class Application1 {
               // action to perform when buy now button is clicked
               JOptionPane.showMessageDialog(checkoutFrame, "Thank you for your purchase!", "Purchase Successful",
                   JOptionPane.INFORMATION_MESSAGE);
-              // create a new ArrayList to hold the sale history items
+                  //remove the cart panne
+                  cartPanel.removeAll();       
+                  cartPanel.revalidate();
+                  cartPanel.repaint();
+                  //repaint cart pannel
+                  cartPanel.add(Box.createVerticalGlue());
+                  cartPanel.add(totalLabel);
+                  cartPanel.add(checkoutButton);
+
+                     
               // copy the cart items to the sale history because the cartItemList is cleared
               // later
               /* 
@@ -347,7 +362,7 @@ public class Application1 {
               orderNumber++;
           
               //redraw the history panel
-              historyPanel.removeAll();
+              //historyPanel.removeAll();
               historyPanel.add(historyLabel); 
           
               for (Enumeration keys = saleHistory.keys(); keys.hasMoreElements();) {
