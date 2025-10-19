@@ -153,9 +153,11 @@ public class Application1 {
 
     // adding items into the cart panel
     // for every item in the cart, add it to the cart panel
-    for (int i = 0; i < cartItemList.size(); i++) {
+    for (int i = 0; i < cartItemList.size(); ) {
       CartItem item=(CartItem)cartItemList.elementAt(i);
-      final CartItem currentItem = item; // final variable for the action listener
+      i = i +1;
+      //final variable for the action listener
+      final CartItem currentItem = item; 
 
       final JPanel itemPanel = new JPanel();
       itemPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -297,7 +299,7 @@ public class Application1 {
         checkoutPanel.add(checkoutLabel);
 
         // add items in the cart to the checkout panel
-        for (int i = 0; i < cartItemList.size(); i++) {
+        for (int i = 0; i < cartItemList.size(); ) {
           CartItem item = (CartItem) cartItemList.elementAt(i);
           JLabel itemLabel = new JLabel(item.getDetails());
           itemLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -311,7 +313,7 @@ public class Application1 {
           checkoutPanel.add(Box.createRigidArea(new Dimension(0, 5)));
           checkoutPanel.add(separator);
           checkoutPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-
+          i = i +1;
         }
 
         // create buy now button
@@ -330,36 +332,22 @@ public class Application1 {
               JOptionPane.showMessageDialog(checkoutFrame, "Thank you for your purchase!", "Purchase Successful",
                   JOptionPane.INFORMATION_MESSAGE);
                   //remove the cart panne
-                  cartPanel.removeAll();       
+                  cartPanel.removeAll();
                   cartPanel.revalidate();
                   cartPanel.repaint();
                   //repaint cart pannel
                   cartPanel.add(Box.createVerticalGlue());
                   cartPanel.add(totalLabel);
                   cartPanel.add(checkoutButton);
-
-                     
-              // copy the cart items to the sale history because the cartItemList is cleared
-              // later
-              /* 
-              // add the cart items and total price to the sale history
+              //create an new vector for storing slae history item
               Vector saleHistoryItemList = new Vector();
-              for (int i = 0; i < cartItemList.size(); i = i + 1) {
-                  saleHistoryItemList.addElement(cartItemList.elementAt(i));
-              }
-              saleHistory.put(totalLabel.getText(), saleHistoryItemList);
-              
-              
-              checkoutFrame.dispose();
-              cartItemList.removeAllElements();
-               */
-              Vector saleHistoryItemList = new Vector();
-              for (int i = 0; i < cartItemList.size(); i++) {
+              for (int i = 0; i < cartItemList.size(); ) {
                 saleHistoryItemList.addElement(cartItemList.elementAt(i));
+                i = i + 1;
               }
               String orderKey = "Order " + orderNumber + " - " + totalLabel.getText();
               saleHistory.put(orderKey, saleHistoryItemList);
-              orderNumber++;
+              orderNumber = orderNumber + 1;
           
               //redraw the history panel
               //historyPanel.removeAll();
@@ -372,8 +360,9 @@ public class Application1 {
                 StringBuffer sb = new StringBuffer();
                 sb.append(String.valueOf(key)).append("\n");
             
-                for (int i = 0; i < items.size(); i++) {
+                for (int i = 0; i < items.size(); ) {
                     sb.append(" • ").append(items.elementAt(i).toString()).append("\n");
+                    i += i + 1;
                 }
             
                 JTextArea area = new JTextArea(sb.toString());
@@ -403,9 +392,12 @@ public class Application1 {
         checkoutPanel.add(Box.createVerticalGlue());
         checkoutPanel.add(buyButton);
 
+        // add a scroll pane to the checkout panel
+        JScrollPane scrollPane = new JScrollPane(checkoutPanel);
+
         // add the panels to the frame
         checkoutFrame.getContentPane().add(checkoutHeaderPanel, BorderLayout.NORTH);
-        checkoutFrame.getContentPane().add(checkoutPanel, BorderLayout.CENTER);
+        checkoutFrame.getContentPane().add(scrollPane, BorderLayout.CENTER);
         checkoutFrame.getContentPane().add(historyPanel, BorderLayout.EAST);
         //historyPanel.setVisible(false);
         /* 
@@ -439,6 +431,21 @@ public class Application1 {
   
 
   public static void addToCart(String name, double price, int quantity) {
+    for (int i = 0; i < cartItemList.size();) {
+      //find cart item number for each product 
+      CartItem ci= (CartItem) cartItemList.elementAt(i);
+      if (ci.name.equals(name)) {
+        //add the quaty to how much much product
+        ci.quantity += quantity;
+        //refresh labels
+        //cartLabelRef.setText("Shopping Cart(" + cartItemList.size() + ")");
+        totalLabelRef.setText("Total: $" + calculatetotal());
+        cartPanelRef.validate();
+        cartPanelRef.repaint();
+        i = i + 1;
+        return;
+      }
+    }
     //create a new cart item and add it to the list
     final CartItem newItem = new CartItem(name, price, quantity);
     cartItemList.addElement(newItem);
