@@ -14,8 +14,8 @@ import java.sql.*;
 import java.util.Enumeration;
 //import java.util.HashMap;
 
-
 public class Application1 {
+  private static final Hashtable saleHistory = new Hashtable();
   public static JPanel cartPanelRef;
   public static JLabel cartLabelRef;
   public static JLabel totalLabelRef;
@@ -28,11 +28,10 @@ public class Application1 {
   private static int itemCount = cartItemList.size(); // item counter for shopping cart
 
   public static void main(String[] args) {
+
     // Hashmap to store sale history
-    //Map saleHistory = new HashMap();
-    final Hashtable saleHistory = new Hashtable();
-
-
+    // Map saleHistory = new HashMap();
+    // final Hashtable saleHistory = new Hashtable();
     /*
      * SOURCE JFRAME
      * The main window of sigmabuster video
@@ -41,13 +40,15 @@ public class Application1 {
     // Step 1: Create a new JFrame (window)
     JFrame frame = new JFrame("SIGMABUSTER VIDEO .inc");
     frame.addWindowListener(new java.awt.event.WindowAdapter() {
-      public void windowClosing(java.awt.event.WindowEvent e) { System.exit(0); }
+      public void windowClosing(java.awt.event.WindowEvent e) {
+        System.exit(0);
+      }
     });
     frame.setSize(1000, 700);
     // frame is divded into NORTH, SOUTH, EAST, WEST and CENTER
     frame.getContentPane().setLayout(new BorderLayout());
     // centre the frame on the screen
-    //frame.setLocationRelativeTo(null);
+    // frame.setLocationRelativeTo(null);
     frame.setResizable(false);
 
     // Step 2: Create a JPanel for the header/logo
@@ -61,49 +62,50 @@ public class Application1 {
     // Add the label to the header panel
     frame.getContentPane().add(headerPanel, BorderLayout.NORTH);
     // align the text to the left
-    //headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+    // headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
     headerPanel.add(headerLabel);
 
     // add the panel to the frame
-    //frame.getContentPane().add(headerPanel, BorderLayout.NORTH);
+    // frame.getContentPane().add(headerPanel, BorderLayout.NORTH);
 
-        //pannel that I could add iamge 
+    // panel that I could add iamge
     JPanel productPanel = new JPanel() {
 
-  };
-        
-      productPanel.setLayout(new BoxLayout(productPanel, BoxLayout.Y_AXIS));
-      productPanel.setPreferredSize(new Dimension(200, 200));
+    };
 
-      //frame.getContentPane().add(productPanel, BorderLayout.WEST);
-      JScrollPane productScroll = new JScrollPane(
-          productPanel,
-          ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-          ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
-      );
-      productScroll.setBorder(null);
-      productScroll.getViewport().setBackground(Color.white);
-      frame.getContentPane().add(productScroll, BorderLayout.WEST);
+    productPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-      //search bar
-      //headerPanel.add(new Searchbar());
+    // frame.getContentPane().add(productPanel, BorderLayout.WEST);
+    JScrollPane productScroll = new JScrollPane(
+        productPanel,
+        ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+    productScroll.setBorder(null);
+    productScroll.getViewport().setBackground(Color.white);
+    frame.getContentPane().add(productScroll, BorderLayout.WEST);
 
-      //headerPanel.add(headerLabel, BorderLayout.WEST);
-      //headerPanel.add(new Searchbar(), BorderLayout.EAST);
+    // search bar
+    // headerPanel.add(new Searchbar());
 
+    // headerPanel.add(headerLabel, BorderLayout.WEST);
+    // headerPanel.add(new Searchbar(), BorderLayout.EAST);
+    // track how much time the customer puchase
+    int purchasenumber = 0;
 
-      //product 1 (apple)
-      JPanel applePanel = new JPanel();
-      applePanel.setLayout(new BoxLayout(applePanel,BoxLayout.Y_AXIS));
-      Product.addToPanelWith("apple.jpg", "Apple",1.50,applePanel,1);
+    // adding products to the product panel
+    Vector products = productReader.readProductsFromFile("classFiles/products.txt");
+    for (int i = 0; i < products.size(); i++) {
+      ProductItem p = (ProductItem) products.elementAt(i);
+      JPanel itemPanel = p.createProductPanel(p);
+      productPanel.add(itemPanel);
+    }
 
-      //headerPanel.add(new Searchbar());
+    // headerPanel.add(new Searchbar());
 
-      productPanel.add(applePanel);
-      productPanel.revalidate();
-      productPanel.repaint();
-      frame.validate();   
-      frame.setVisible(true);
+    productPanel.revalidate();
+    productPanel.repaint();
+    frame.validate();
+    frame.setVisible(true);
 
     final JPanel cartPanel = new JPanel();
     cartPanel.setBackground(Color.white);
@@ -120,44 +122,29 @@ public class Application1 {
     // set the label to be centered
     cartLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
     cartPanel.add(cartLabel);
-    
+
     Application1.cartPanelRef = cartPanel;
     Application1.cartLabelRef = cartLabel;
 
     // test items in the cart
-   //CartItem item1 = new CartItem("placeholder 1", 9.99, 1);
-    //CartItem item2 = new CartItem("placeholder 2", 19.99, 2);
+    // CartItem item1 = new CartItem("placeholder 1", 9.99, 1);
+    // CartItem item2 = new CartItem("placeholder 2", 19.99, 2);
 
-    //itemCount = cartItemList.size();
-    //cartLabel.setText("Shopping Cart(" + itemCount + ")");
-    //cartItemList.addElement(item1);
-    //cartItemList.addElement(item2);
-    
+    // itemCount = cartItemList.size();
+    // cartLabel.setText("Shopping Cart(" + itemCount + ")");
+    // cartItemList.addElement(item1);
+    // cartItemList.addElement(item2);
+
     itemCount = cartItemList.size();
     cartLabel.setText("Shopping Cart(" + itemCount + ")");
-    
 
     // add items to the cart panel
-/* 
-    // this is hardcoded for now, until I add the products
-    JLabel itemLabel1 = new JLabel(item1.getDetails());
-    itemLabel1.setAlignmentX(Component.CENTER_ALIGNMENT);
-    itemLabel1.setFont(new Font("Serif", Font.PLAIN, 15));
-    JLabel itemLabel2 = new JLabel(item2.getDetails());
-    itemLabel2.setAlignmentX(Component.CENTER_ALIGNMENT);
-    itemLabel2.setFont(new Font("Serif", Font.PLAIN, 15));
-
-    cartItemList.addElement(item1);
-    cartItemList.addElement(item2);    
-    */
 
     // adding items into the cart panel
     // for every item in the cart, add it to the cart panel
-    for (int i = 0; i < cartItemList.size(); ) {
-      CartItem item=(CartItem)cartItemList.elementAt(i);
-      i = i +1;
-      //final variable for the action listener
-      final CartItem currentItem = item; 
+    for (int i = 0; i < cartItemList.size(); i++) {
+      CartItem item = (CartItem) cartItemList.elementAt(i);
+      final CartItem currentItem = item; // final variable for the action listener
 
       final JPanel itemPanel = new JPanel();
       itemPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -183,7 +170,7 @@ public class Application1 {
           cartPanel.remove(itemPanel);
           cartPanel.validate();
           cartPanel.repaint();
-          //itemCount--; // decrement the item count
+          // itemCount--; // decrement the item count
           itemCount = cartItemList.size();
           cartLabel.setText("Shopping Cart(" + itemCount + ")");
         }
@@ -198,7 +185,7 @@ public class Application1 {
 
     // create a button to go to checkout
     JButton checkoutButton = new JButton("Go to Checkout ->");
-    
+
     checkoutButton.setFont(new Font("Serif", Font.BOLD, 20));
     // set the button to be centered
     checkoutButton.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -220,24 +207,26 @@ public class Application1 {
         // opens up a new window for checkout
         final JFrame checkoutFrame = new JFrame("Checkout");
         checkoutFrame.addWindowListener(new java.awt.event.WindowAdapter() {
-          public void windowClosing(java.awt.event.WindowEvent e) { checkoutFrame.dispose(); }
+          public void windowClosing(java.awt.event.WindowEvent e) {
+            checkoutFrame.dispose();
+          }
         });
         checkoutFrame.setSize(560, 400);
         checkoutFrame.getContentPane().setLayout(new BorderLayout());
-        //size the check out screen
+        // size the check out screen
         java.awt.Dimension scr = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        int w = (scr.width  * 5) / 10;   
-        int h = (scr.height * 5) / 10;   
+        int w = (scr.width * 5) / 10;
+        int h = (scr.height * 5) / 10;
         checkoutFrame.setSize(w, h);
-        //purchase history
-        /* 
-        Vector saleHistoryItemList = new Vector();
-        for (int i = 0; i < cartItemList.size(); i = i + 1) {
-          saleHistoryItemList.addElement(cartItemList.elementAt(i));
-          }
-        String orderKey = "Order " + orderNumber + " - " + totalLabel.getText();
-        saleHistory.put(orderKey, saleHistoryItemList);
-        orderNumber = orderNumber + 1;
+        // purchase history
+        /*
+         * Vector saleHistoryItemList = new Vector();
+         * for (int i = 0; i < cartItemList.size(); i = i + 1) {
+         * saleHistoryItemList.addElement(cartItemList.elementAt(i));
+         * }
+         * String orderKey = "Order " + orderNumber + " - " + totalLabel.getText();
+         * saleHistory.put(orderKey, saleHistoryItemList);
+         * orderNumber = orderNumber + 1;
          */
         /* CHECKOUT HEADER */
         JPanel checkoutHeaderPanel = new JPanel();
@@ -250,14 +239,14 @@ public class Application1 {
         // align the text to the left
         checkoutHeaderPanel.setLayout(new BorderLayout());
         checkoutHeaderPanel.add(checkoutHeaderLabel, BorderLayout.WEST);
-        /* 
-        {
-          JPanel sb = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-          sb.add(new JLabel("Search:"));
-          sb.add(new JTextField(12));
-          checkoutHeaderPanel.add(sb, BorderLayout.EAST);
-        }
-        */
+        /*
+         * {
+         * JPanel sb = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+         * sb.add(new JLabel("Search:"));
+         * sb.add(new JTextField(12));
+         * checkoutHeaderPanel.add(sb, BorderLayout.EAST);
+         * }
+         */
         checkoutHeaderPanel.add(new Searchbar(), BorderLayout.EAST);
         // add a history of products panel
         final JPanel historyPanel = new JPanel();
@@ -268,23 +257,10 @@ public class Application1 {
         final JLabel historyLabel = new JLabel("Purchase History");
         historyLabel.setFont(new Font("Serif", Font.BOLD, 15));
         historyLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        //clear the pannel
+        // clear the pannel to repaint new one
         historyPanel.removeAll();
         historyPanel.add(historyLabel);
-        //historyPanel.add(historyLabel);
-        //historyLabel.setFont(new Font("Serif", Font.BOLD, 15));
-        //historyLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        /* 
-        for (Enumeration keys = saleHistory.keys(); keys.hasMoreElements(); ) {
-          Object key = keys.nextElement();                 
-          Object value = saleHistory.get(key);              
-          System.out.println(value);
-          JLabel historyItemLabel = new JLabel(String.valueOf(key) + String.valueOf(value));
-          historyItemLabel.setFont(new Font("Serif", Font.PLAIN, 12));
-          historyItemLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-          historyPanel.add(historyItemLabel);
-        } 
-          */        
+        // historyLabel.setFont(new Font("Serif", Font.BOLD, 15));
 
         // create a checkout panel
         JPanel checkoutPanel = new JPanel();
@@ -299,7 +275,7 @@ public class Application1 {
         checkoutPanel.add(checkoutLabel);
 
         // add items in the cart to the checkout panel
-        for (int i = 0; i < cartItemList.size(); ) {
+        for (int i = 0; i < cartItemList.size(); i++) {
           CartItem item = (CartItem) cartItemList.elementAt(i);
           JLabel itemLabel = new JLabel(item.getDetails());
           itemLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -313,7 +289,7 @@ public class Application1 {
           checkoutPanel.add(Box.createRigidArea(new Dimension(0, 5)));
           checkoutPanel.add(separator);
           checkoutPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-          i = i +1;
+
         }
 
         // create buy now button
@@ -331,58 +307,61 @@ public class Application1 {
               // action to perform when buy now button is clicked
               JOptionPane.showMessageDialog(checkoutFrame, "Thank you for your purchase!", "Purchase Successful",
                   JOptionPane.INFORMATION_MESSAGE);
-                  //remove the cart panne
-                  cartPanel.removeAll();
-                  cartPanel.revalidate();
-                  cartPanel.repaint();
-                  //repaint cart pannel
-                  cartPanel.add(Box.createVerticalGlue());
-                  cartPanel.add(totalLabel);
-                  cartPanel.add(checkoutButton);
-              //create an new vector for storing slae history item
+              // remove the cart panne
+              cartPanel.removeAll();
+              cartPanel.revalidate();
+              cartPanel.repaint();
+              // repaint cart pannel
+              cartPanel.add(Box.createVerticalGlue());
+              cartPanel.add(totalLabel);
+              cartPanel.add(checkoutButton);
+
               Vector saleHistoryItemList = new Vector();
-              for (int i = 0; i < cartItemList.size(); ) {
+              for (int i = 0; i < cartItemList.size(); i++) {
                 saleHistoryItemList.addElement(cartItemList.elementAt(i));
-                i = i + 1;
               }
               String orderKey = "Order " + orderNumber + " - " + totalLabel.getText();
               saleHistory.put(orderKey, saleHistoryItemList);
-              orderNumber = orderNumber + 1;
-          
-              //redraw the history panel
-              //historyPanel.removeAll();
-              historyPanel.add(historyLabel); 
-          
+              orderNumber++;
+
+              // redraw the history panel
+              // historyPanel.removeAll();
+              historyPanel.add(historyLabel);
+              historyPanel.removeAll();
+              historyPanel.add(historyLabel);
+
               for (Enumeration keys = saleHistory.keys(); keys.hasMoreElements();) {
                 Object key = keys.nextElement();
                 Vector items = (Vector) saleHistory.get(key);
-            
+
                 StringBuffer sb = new StringBuffer();
                 sb.append(String.valueOf(key)).append("\n");
-            
-                for (int i = 0; i < items.size(); ) {
-                    sb.append(" • ").append(items.elementAt(i).toString()).append("\n");
-                    i += i + 1;
+
+                for (int i = 0; i < items.size(); i++) {
+                  sb.append(" • ").append(items.elementAt(i).toString()).append("\n");
                 }
-            
+
                 JTextArea area = new JTextArea(sb.toString());
                 area.setEditable(false);
                 area.setOpaque(false);
                 area.setFont(new Font("Serif", Font.PLAIN, 12));
-            
+
                 historyPanel.add(area);
-            }
-            
-            historyPanel.revalidate();
-            historyPanel.repaint();
-          
+              }
+              // if purchasenumber = 0;
+              historyPanel.revalidate();
+              historyPanel.repaint();
+              historyPanel.add(historyLabel);
+              historyLabel.setFont(new Font("Serif", Font.BOLD, 15));
+
               // reset the cart
               cartItemList.removeAllElements();
               totalLabel.setText("Total: $0.00");
               itemCount = 0;
               cartLabel.setText("Shopping Cart(0)");
 
-              itemCount = 0; // reset the item count
+              itemCount = 0;
+              // reset the item count
             }
           }
 
@@ -392,21 +371,43 @@ public class Application1 {
         checkoutPanel.add(Box.createVerticalGlue());
         checkoutPanel.add(buyButton);
 
-        // add a scroll pane to the checkout panel
-        JScrollPane scrollPane = new JScrollPane(checkoutPanel);
-
         // add the panels to the frame
         checkoutFrame.getContentPane().add(checkoutHeaderPanel, BorderLayout.NORTH);
-        checkoutFrame.getContentPane().add(scrollPane, BorderLayout.CENTER);
-        checkoutFrame.getContentPane().add(historyPanel, BorderLayout.EAST);
-        //historyPanel.setVisible(false);
-        /* 
-        // centre the frame on the screen
-        { java.awt.Dimension scr = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-          checkoutFrame.setLocation((scr.width - checkoutFrame.getWidth())/2,
-                                    (scr.height - checkoutFrame.getHeight())/2);
+        checkoutFrame.getContentPane().add(checkoutPanel, BorderLayout.CENTER);
+        historyPanel.removeAll();
+        historyPanel.add(historyLabel);
+        historyPanel.add(Box.createRigidArea(new Dimension(0, 6)));
+
+        // add all existing orders
+        for (Enumeration keys = saleHistory.keys(); keys.hasMoreElements();) {
+          Object key = keys.nextElement();
+          Vector items = (Vector) saleHistory.get(key);
+          StringBuffer sb = new StringBuffer();
+          sb.append(String.valueOf(key)).append("\n");
+          for (int i = 0; i < items.size(); i++) {
+            sb.append(" • ").append(items.elementAt(i).toString()).append("\n");
+          }
+          JTextArea area = new JTextArea(sb.toString());
+          area.setEditable(false);
+          area.setOpaque(false);
+          area.setFont(new Font("Serif", Font.PLAIN, 12));
+          historyPanel.add(area);
+          historyPanel.add(Box.createRigidArea(new Dimension(0, 8)));
         }
-          */
+
+        historyPanel.revalidate();
+        historyPanel.repaint();
+        checkoutFrame.getContentPane().add(historyPanel, BorderLayout.EAST);
+
+        // historyPanel.setVisible(false);
+        /*
+         * // centre the frame on the screen
+         * { java.awt.Dimension scr =
+         * java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+         * checkoutFrame.setLocation((scr.width - checkoutFrame.getWidth())/2,
+         * (scr.height - checkoutFrame.getHeight())/2);
+         * }
+         */
         checkoutFrame.setResizable(false);
         checkoutFrame.setVisible(true);
       }
@@ -418,39 +419,24 @@ public class Application1 {
     frame.setVisible(true);
 
   }
-  //for calculating the total price of product
+
+  // for calculating the total price of product
   private static double calculatetotal() {
     double sum = 0.0;
-    for (int i = 0; i < cartItemList.size(); ) {
+    for (int i = 0; i < cartItemList.size();) {
       CartItem c = (CartItem) cartItemList.elementAt(i);
       sum += c.getTotalPrice();
-      i = i +1;
+      i = i + 1;
     }
     return sum;
   }
-  
 
   public static void addToCart(String name, double price, int quantity) {
-    for (int i = 0; i < cartItemList.size();) {
-      //find cart item number for each product 
-      CartItem ci= (CartItem) cartItemList.elementAt(i);
-      if (ci.name.equals(name)) {
-        //add the quaty to how much much product
-        ci.quantity += quantity;
-        //refresh labels
-        //cartLabelRef.setText("Shopping Cart(" + cartItemList.size() + ")");
-        totalLabelRef.setText("Total: $" + calculatetotal());
-        cartPanelRef.validate();
-        cartPanelRef.repaint();
-        i = i + 1;
-        return;
-      }
-    }
-    //create a new cart item and add it to the list
+    // create a new cart item and add it to the list
     final CartItem newItem = new CartItem(name, price, quantity);
     cartItemList.addElement(newItem);
 
-    //build a row for cart
+    // build a row for cart
     final JPanel itemPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
     itemPanel.setBackground(Color.lightGray);
     itemPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.black));
@@ -464,13 +450,12 @@ public class Application1 {
     itemPanel.add(removeButton);
     int insertIndex = Math.max(0, cartPanelRef.getComponentCount() - 2);
     cartPanelRef.add(itemPanel, insertIndex);
-        
 
-    //update labels
+    // update labels
     cartLabelRef.setText("Shopping Cart(" + cartItemList.size() + ")");
     totalLabelRef.setText("Total: $" + calculatetotal());
 
-    //refresh the ui
+    // refresh the ui
     cartPanelRef.validate();
     cartPanelRef.repaint();
 
@@ -486,7 +471,8 @@ public class Application1 {
     });
   }
 
-  }
+}
+
 class CartItem extends ProductItem {
   int quantity; // quantity of the item in the cart
   // to represent an item in the shopping cart
@@ -495,7 +481,8 @@ class CartItem extends ProductItem {
   // constructor for CartItem
   // calls the superclass constructor (ProductItem)
   public CartItem(String name, double price, int quantity) {
-    super(name, price, ""); // call the superclass constructor
+    // call the superclass constructor
+    super(0, name, (float) price, 0, "");
     this.quantity = quantity;
   }
 
@@ -503,31 +490,32 @@ class CartItem extends ProductItem {
   public double getTotalPrice() {
     return price * quantity;
   }
-  //@Override
+
+  @Override
   public String toString() {
     return name + " - $" + price + " x " + quantity;
+  }
 }
-}
-
 
 /* ProductItem class */
-abstract class ProductItem {
+class ProductItem {
   // to represent the products we're selling
   // will have name, price, inStore, description, imageName
   // method to add to cart
   // method to get product details
+  protected int productID;
   protected String name;
-  protected double price;
+  protected float price;
   protected int inStore;
-  protected String description;
   protected String imageName;
 
-  public ProductItem(String name, double price, String description) {
+  // constructor
+  public ProductItem(int productID, String name, float price, int inStore, String imageName) {
+    this.productID = productID;
     this.name = name;
     this.price = price;
-    this.inStore = 1;
-    this.description = description;
-    this.imageName = "image/cookie.jpg"; // cookie image as default
+    this.inStore = inStore;
+    this.imageName = imageName;
   }
 
   /* method to get product details */
@@ -542,8 +530,56 @@ abstract class ProductItem {
     Application1.cartItemList.addElement(newItem);
     // change the quantity of the product
     this.inStore -= quantity;
+  }
 
+  /* method to create product panel to display */
+  public JPanel createProductPanel(ProductItem product) {
+    // create a new JPanel
+    JPanel subItemPanel = new JPanel();
+    subItemPanel.setLayout(new BoxLayout(subItemPanel, BoxLayout.Y_AXIS));
+    subItemPanel.setBorder(BorderFactory.createLineBorder(Color.lightGray, 5));
+
+    // add the product image
+    ImageIcon icon = new ImageIcon("images/" + product.imageName + "");
+    JLabel imageLabel = new JLabel(icon);
+    imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    subItemPanel.add(imageLabel);
+
+    // add a label for the product name
+    JLabel nameLabel = new JLabel(product.name);
+    nameLabel.setFont(new Font("Serif", Font.BOLD, 14));
+    nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+    // text
+    JLabel textLabel = new JLabel(name + " - $" + price);
+    textLabel.setFont(new Font("Serif", Font.PLAIN, 16));
+
+    // scale cart to 10% of the product
+    // int cartWidth = icon.getIconWidth() / 10;
+    // int cartHeight = icon.getIconHeight() / 10;
+    // infoPanel.add(cartLabel);
+    ImageIcon cartIcon = new ImageIcon("images/cart.jpg");
+    Image original = cartIcon.getImage();
+    Image scaled = original.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+    ImageIcon smallCartIcon = new ImageIcon(scaled);
+    JButton cartButtton = new JButton(smallCartIcon);
+
+    // info panel
+    JPanel infoPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
+    infoPanel.setOpaque(false);
+    infoPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+    infoPanel.add(textLabel);
+    infoPanel.add(cartButtton);
+
+    subItemPanel.add(infoPanel);
+
+    cartButtton.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        Application1.addToCart(name, price, 1);
+      }
+    });
+
+    return subItemPanel;
   }
 }
-
-
