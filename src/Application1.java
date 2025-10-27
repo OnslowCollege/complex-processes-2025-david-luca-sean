@@ -73,16 +73,23 @@ public class Application1 {
 
     };
 
-    productPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+    // set up height for product panel
+    int itemHeight = 250;
+    int itemsPerRow = 4;
+    int totalItems = productReader.readProductsFromFile("data/products.txt").size();
+    int rows = (int) Math.ceil((double) totalItems / itemsPerRow);
+    int panelHeight = rows * itemHeight;
 
-    // frame.getContentPane().add(productPanel, BorderLayout.WEST);
-    JScrollPane productScroll = new JScrollPane(
-        productPanel,
-        ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-    productScroll.setBorder(null);
-    productScroll.getViewport().setBackground(Color.white);
-    frame.getContentPane().add(productScroll, BorderLayout.WEST);
+    productPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+    productPanel.setPreferredSize(new Dimension(800, panelHeight));
+    productPanel.setBackground(Color.lightGray);
+
+    // add a vertical scroll
+    JScrollPane scrollPane = new JScrollPane(productPanel);
+    scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+    scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+    frame.getContentPane().add(scrollPane);
 
     // search bar
     // headerPanel.add(new Searchbar());
@@ -93,7 +100,7 @@ public class Application1 {
     int purchasenumber = 0;
 
     // adding products to the product panel
-    Vector products = productReader.readProductsFromFile("classFiles/products.txt");
+    Vector products = productReader.readProductsFromFile("data/products.txt");
     for (int i = 0; i < products.size(); i++) {
       ProductItem p = (ProductItem) products.elementAt(i);
       JPanel itemPanel = p.createProductPanel(p);
@@ -184,7 +191,7 @@ public class Application1 {
     totalLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     // create a button to go to checkout
-    JButton checkoutButton = new JButton("Go to Checkout ->");
+    final JButton checkoutButton = new JButton("Go to Checkout ->");
 
     checkoutButton.setFont(new Font("Serif", Font.BOLD, 20));
     // set the button to be centered
@@ -482,7 +489,7 @@ class CartItem extends ProductItem {
   // calls the superclass constructor (ProductItem)
   public CartItem(String name, double price, int quantity) {
     // call the superclass constructor
-    super(0, name, (float) price, 0, "");
+    super(0, name, (float) price, quantity, "");
     this.quantity = quantity;
   }
 
@@ -491,7 +498,6 @@ class CartItem extends ProductItem {
     return price * quantity;
   }
 
-  @Override
   public String toString() {
     return name + " - $" + price + " x " + quantity;
   }
@@ -537,13 +543,16 @@ class ProductItem {
     // create a new JPanel
     JPanel subItemPanel = new JPanel();
     subItemPanel.setLayout(new BoxLayout(subItemPanel, BoxLayout.Y_AXIS));
-    subItemPanel.setBorder(BorderFactory.createLineBorder(Color.lightGray, 5));
+    subItemPanel.setBorder(BorderFactory.createLineBorder(Color.lightGray, 2));
 
     // add the product image
     ImageIcon icon = new ImageIcon("images/" + product.imageName + "");
     JLabel imageLabel = new JLabel(icon);
+    // scale image to fit in the panel
+    Image img = icon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+    imageLabel.setIcon(new ImageIcon(img));
+
     imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-    subItemPanel.add(imageLabel);
 
     // add a label for the product name
     JLabel nameLabel = new JLabel(product.name);
@@ -551,8 +560,8 @@ class ProductItem {
     nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     // text
-    JLabel textLabel = new JLabel(name + " - $" + price);
-    textLabel.setFont(new Font("Serif", Font.PLAIN, 16));
+    JLabel textLabel = new JLabel(" - $" + price);
+    textLabel.setFont(new Font("Serif", Font.PLAIN, 14));
 
     // scale cart to 10% of the product
     // int cartWidth = icon.getIconWidth() / 10;
@@ -560,7 +569,7 @@ class ProductItem {
     // infoPanel.add(cartLabel);
     ImageIcon cartIcon = new ImageIcon("images/cart.jpg");
     Image original = cartIcon.getImage();
-    Image scaled = original.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+    Image scaled = original.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
     ImageIcon smallCartIcon = new ImageIcon(scaled);
     JButton cartButtton = new JButton(smallCartIcon);
 
@@ -572,6 +581,8 @@ class ProductItem {
     infoPanel.add(textLabel);
     infoPanel.add(cartButtton);
 
+    subItemPanel.add(nameLabel);
+    subItemPanel.add(imageLabel);
     subItemPanel.add(infoPanel);
 
     cartButtton.addActionListener(new ActionListener() {

@@ -1,0 +1,12 @@
+ProductID,name,price,inStore,imageName
+1,Starwars,20.0,10,apple.jpg
+2,The Matrix,20.0,5,apple.jpg
+3,Borat,50.0,20,apple.jpg
+4,Squidgame,30.0,30,apple.jpg
+5,Rush Hour, 10.0,10,apple.jpg
+6,Cars,10.0,10,apple.jpg
+7,M&M Cookie,2.50,50,apple.jpg
+8,Alien,10.0,5,apple.jpg
+9,Avatar,15.0,8,apple.jpg
+10,Bolt,7.50,5,apple.jpg
+11,Spiderman,12.50,7,apple.jpg
