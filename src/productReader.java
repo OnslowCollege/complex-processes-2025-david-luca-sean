@@ -1,5 +1,6 @@
 
 import java.io.*;
+import java.util.StringTokenizer;
 import java.util.Vector;
 
 public class productReader {
@@ -15,14 +16,21 @@ public class productReader {
       reader.readLine();
 
       while ((line = reader.readLine()) != null) {
-        String[] fields = line.split(",");
+        //String[] fields = line.split(",");
+        StringTokenizer token = new StringTokenizer(line, ",");
+        String[] fields = new String[5];
+        int i = 0;
+        while (token.hasMoreTokens() && i<5) {
+          fields[i]=token.nextToken().trim();
+          i = i + 1;
+        }
 
         if (fields.length == 5) {
-          int id = Integer.parseInt(fields[0].trim());
-          String name = fields[1].trim();
-          float price = Float.parseFloat(fields[2].trim());
-          int quantity = Integer.parseInt(fields[3].trim());
-          String imageFile = fields[4].trim();
+          int id = Integer.parseInt(fields[0]);
+          String name = fields[1];
+          float price = Float.valueOf(fields[2]).floatValue();
+          int quantity = Integer.parseInt(fields[3]);
+          String imageFile = fields[4];
 
           ProductItem product = new concreteProductItem(id, name, price, quantity, imageFile);
           products.addElement(product);
