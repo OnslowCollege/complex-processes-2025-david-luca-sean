@@ -56,10 +56,43 @@ public class Application1 {
     JPanel headerPanel = new JPanel(new BorderLayout());
     headerPanel.setBackground(Color.blue);
     // Create a label for the header
+    
     JLabel headerLabel = new JLabel(" SIGMABUSTER VIDEO");
     headerLabel.setForeground(Color.yellow); // set text color to yellow
     headerLabel.setFont(new Font("Serif", Font.BOLD, 35));
     headerPanel.add(new Searchbar(), BorderLayout.EAST);
+    final JButton transactionButton = new JButton("Transaction");
+    headerPanel.add(transactionButton, BorderLayout.EAST);
+    transactionButton.setFont(new Font("Serif", Font.BOLD, 15));
+    transactionButton.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        JFrame transactionFrame = new JFrame("Transactions");
+        transactionFrame.getContentPane().setLayout(new BorderLayout());
+        java.awt.Dimension scr = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        int w = (scr.width * 5) / 10;
+        int h = (scr.height * 5) / 10;
+        transactionFrame.setSize(w, h);
+
+        JPanel transactionFrameHeaderPanel = new JPanel();
+        transactionFrameHeaderPanel.setBackground(Color.blue);
+
+        JLabel transactionFrameHeaderLabel = new JLabel("SIGMABUSTER transaction hisory");
+        transactionFrameHeaderLabel.setForeground(Color.yellow);
+        transactionFrameHeaderLabel.setFont(new Font("Serif", Font.BOLD, 27));
+        
+        transactionFrame.setSize(560, 400);
+        transactionFrame.getContentPane().setLayout(new BorderLayout());
+        transactionFrame.getContentPane().add(new JScrollPane(new JTextArea()), BorderLayout.CENTER);
+
+        transactionFrame.setVisible(true);
+        transactionFrameHeaderPanel.setLayout(new BorderLayout());
+        transactionFrameHeaderPanel.add(transactionFrameHeaderLabel, BorderLayout.WEST);
+        transactionFrame.getContentPane().add(transactionFrameHeaderPanel, BorderLayout.NORTH);
+        // size the check out screen
+
+          }
+});
+        //main 
     // Add the label to the header panel
     frame.getContentPane().add(headerPanel, BorderLayout.NORTH);
     // align the text to the left
@@ -300,7 +333,7 @@ public class Application1 {
               // if the cart is empty, show a message
               JOptionPane.showMessageDialog(checkoutFrame, "Your cart is empty!", "Empty Cart",
                   JOptionPane.WARNING_MESSAGE);
-              return; // exit the action listener
+              return;
             } else {
               // action to perform when buy now button is clicked
               JOptionPane.showMessageDialog(checkoutFrame, "Thank you for your purchase!", "Purchase Successful",
@@ -313,14 +346,13 @@ public class Application1 {
               cartPanel.add(Box.createVerticalGlue());
               cartPanel.add(totalLabel);
               cartPanel.add(checkoutButton);
-
-              Transaction tx = new Transaction(orderNumber);
-
-              for (int f = 0;f< cartItemList.size(); f++){
-              tx.addItem((CartItem) cartItemList.elementAt(f));
               
+              Transaction t = new Transaction(orderNumber);
+
+              for(int f= 0; f<cartItemList.size();f++){
+                t.addItem((CartItem)cartItemList.elementAt(f));
               }
-        
+              //record of sale history
               Vector saleHistoryItemList = new Vector();
               for (int i = 0; i < cartItemList.size(); i++) {
                 saleHistoryItemList.addElement(cartItemList.elementAt(i));
@@ -328,36 +360,31 @@ public class Application1 {
               String orderKey = "Order " + orderNumber + " - " + totalLabel.getText();
               saleHistory.put(orderKey, saleHistoryItemList);
               orderNumber++;
-
-              // redraw the history panel
-              // historyPanel.removeAll();
-              historyPanel.add(historyLabel);
+              //clear old and rebuild the pannel
               historyPanel.removeAll();
               historyPanel.add(historyLabel);
-
+              historyLabel.setFont(new Font("Serif", Font.BOLD,15));
+              //add each order from saleHistory
               for (Enumeration keys = saleHistory.keys(); keys.hasMoreElements();) {
                 Object key = keys.nextElement();
                 Vector items = (Vector) saleHistory.get(key);
 
                 StringBuffer sb = new StringBuffer();
                 sb.append(String.valueOf(key)).append("\n");
-
-                for (int i = 0; i < items.size(); i++) {
+                for (int i = 0; i < items.size();) {
                   sb.append(" • ").append(items.elementAt(i).toString()).append("\n");
+                  i++;
                 }
-
+                //to string to makesure it dosnt crash.
                 JTextArea area = new JTextArea(sb.toString());
                 area.setEditable(false);
                 area.setOpaque(false);
                 area.setFont(new Font("Serif", Font.PLAIN, 12));
-
                 historyPanel.add(area);
               }
-              // if purchasenumber = 0;
-              historyPanel.revalidate();
-              historyPanel.repaint();
-              historyPanel.add(historyLabel);
-              historyLabel.setFont(new Font("Serif", Font.BOLD, 15));
+
+              historyPanel.revalidate(); 
+              }
 
               // reset the cart
               cartItemList.removeAllElements();
@@ -368,7 +395,7 @@ public class Application1 {
               itemCount = 0;
               // reset the item count
             }
-          }
+          
 
         });
 

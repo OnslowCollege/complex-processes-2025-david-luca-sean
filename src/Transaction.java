@@ -9,7 +9,7 @@ public class Transaction {
     private Date when;
     private Vector items;
 
-    private static final  SimpleDateFormat DT_FMT = new SimpleDateFormat("yyyy-MM-dd  HH:mm");
+    private static final  SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd  HH:mm");
     final DecimalFormat Money = new DecimalFormat("");
 
     //constructors
