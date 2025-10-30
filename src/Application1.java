@@ -14,6 +14,7 @@ import java.sql.*;
 import java.util.Enumeration;
 //import java.util.HashMap;
 
+
 public class Application1 {
   private static final Hashtable saleHistory = new Hashtable();
   public static JPanel cartPanelRef;
@@ -225,16 +226,6 @@ public class Application1 {
         int w = (scr.width * 5) / 10;
         int h = (scr.height * 5) / 10;
         checkoutFrame.setSize(w, h);
-        // purchase history
-        /*
-         * Vector saleHistoryItemList = new Vector();
-         * for (int i = 0; i < cartItemList.size(); i = i + 1) {
-         * saleHistoryItemList.addElement(cartItemList.elementAt(i));
-         * }
-         * String orderKey = "Order " + orderNumber + " - " + totalLabel.getText();
-         * saleHistory.put(orderKey, saleHistoryItemList);
-         * orderNumber = orderNumber + 1;
-         */
         /* CHECKOUT HEADER */
         JPanel checkoutHeaderPanel = new JPanel();
         checkoutHeaderPanel.setBackground(Color.blue);
@@ -323,6 +314,13 @@ public class Application1 {
               cartPanel.add(totalLabel);
               cartPanel.add(checkoutButton);
 
+              Transaction tx = new Transaction(orderNumber);
+
+              for (int f = 0;f< cartItemList.size(); f++){
+              tx.addItem((CartItem) cartItemList.elementAt(f));
+              
+              }
+        
               Vector saleHistoryItemList = new Vector();
               for (int i = 0; i < cartItemList.size(); i++) {
                 saleHistoryItemList.addElement(cartItemList.elementAt(i));
@@ -439,6 +437,23 @@ public class Application1 {
   }
 
   public static void addToCart(String name, double price, int quantity) {
+    /*  
+    for (int i = 0; i < cartItemList.size();) {
+      //find cart item number for each product 
+      CartItem ci= (CartItem) cartItemList.elementAt(i);
+      if (ci.name.equals(name)) {
+        //add the quaty to how much much product
+        ci.quantity += quantity;
+        //refresh labels
+        //cartLabelRef.setText("Shopping Cart(" + cartItemList.size() + ")");
+        totalLabelRef.setText("Total: $" + calculatetotal());
+        cartPanelRef.validate();
+        cartPanelRef.repaint();
+        i = i + 1;
+        return;
+      }
+    }
+    */ 
     // create a new cart item and add it to the list
     final CartItem newItem = new CartItem(name, price, quantity);
     cartItemList.addElement(newItem);
