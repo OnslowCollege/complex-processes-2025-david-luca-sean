@@ -14,7 +14,6 @@ import java.sql.*;
 import java.util.Enumeration;
 //import java.util.HashMap;
 
-
 public class Application1 {
   private static final Hashtable saleHistory = new Hashtable();
   public static JPanel cartPanelRef;
@@ -22,7 +21,7 @@ public class Application1 {
   public static JLabel totalLabelRef;
   public static Component cartGlueRef;
 
-  //public static int orderNumber = 1;
+  // public static int orderNumber = 1;
 
   // ArrayList to hold cart items
   public static Vector cartItemList = new Vector();
@@ -60,20 +59,20 @@ public class Application1 {
     JLabel headerLabel = new JLabel(" SIGMABUSTER VIDEO");
     headerLabel.setForeground(Color.yellow); // set text color to yellow
     headerLabel.setFont(new Font("Serif", Font.BOLD, 35));
-    //headerPanel.add(new Searchbar(), BorderLayout.EAST);
+    // headerPanel.add(new Searchbar(), BorderLayout.EAST);
     final JButton transactionButton = new JButton("Transaction");
     headerPanel.add(transactionButton, BorderLayout.EAST);
     transactionButton.setFont(new Font("Serif", Font.BOLD, 15));
-    TransactionPage transactionPage=new TransactionPage();
+    TransactionPage transactionPage = new TransactionPage();
     transactionButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
 
         // size the check out screen
         transactionPage.show();
 
-          }
-});
-        //main
+      }
+    });
+    // main
     // Add the label to the header panel
     frame.getContentPane().add(headerPanel, BorderLayout.NORTH);
     // align the text to the left
@@ -328,28 +327,27 @@ public class Application1 {
               cartPanel.add(totalLabel);
               cartPanel.add(checkoutButton);
 
-
-              long time = System.currentTimeMillis();      // milliseconds since 1970
-              int orderNumber = (int)(Math.random() * 10000);
+              long time = System.currentTimeMillis();
+              int orderNumber = (int) (Math.random() * 10000);
 
               Transaction t = new Transaction(orderNumber);
 
-              for(int f= 0; f<cartItemList.size();f++){
-                t.addItem((CartItem)cartItemList.elementAt(f));
+              for (int f = 0; f < cartItemList.size(); f++) {
+                t.addItem((CartItem) cartItemList.elementAt(f));
               }
               transactionPage.addTransaction(t);
-              //record of sale history
+              // record of sale history
               Vector saleHistoryItemList = new Vector();
               for (int i = 0; i < cartItemList.size(); i++) {
                 saleHistoryItemList.addElement(cartItemList.elementAt(i));
               }
               String orderKey = "Order " + orderNumber + " - " + totalLabel.getText();
               saleHistory.put(orderKey, saleHistoryItemList);
-              //clear old and rebuild the pannel
+              // clear old and rebuild the pannel
               historyPanel.removeAll();
               historyPanel.add(historyLabel);
-              historyLabel.setFont(new Font("Serif", Font.BOLD,15));
-              //add each order from saleHistory
+              historyLabel.setFont(new Font("Serif", Font.BOLD, 15));
+              // add each order from saleHistory
               for (Enumeration keys = saleHistory.keys(); keys.hasMoreElements();) {
                 Object key = keys.nextElement();
                 Vector items = (Vector) saleHistory.get(key);
@@ -359,21 +357,20 @@ public class Application1 {
                 for (int i = 0; i < items.size();) {
                   sb.append(" • ").append(items.elementAt(i).toString()).append("\n");
                   i++;
-                  //add the time the order is maked
-                java.text.SimpleDateFormat eeee = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
-                sb.append("tim of purchase ").append(eeee.format(t.getWhen())).append("\n");
+                  // add the time the order is maked
+                  java.text.SimpleDateFormat eeee = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
+                  sb.append("tim of purchase ").append(eeee.format(t.getWhen())).append("\n");
 
                 }
-                //to string to makesure it dosnt crash.
-              JTextArea area = new JTextArea(sb.toString());
-              area.setEditable(false);
-              area.setOpaque(false);
-              area.setFont(new Font("Serif", Font.PLAIN, 12));
-              historyPanel.add(area);
+                // to string to makesure it dosnt crash.
+                JTextArea area = new JTextArea(sb.toString());
+                area.setEditable(false);
+                area.setOpaque(false);
+                area.setFont(new Font("Serif", Font.PLAIN, 12));
+                historyPanel.add(area);
               }
 
               historyPanel.revalidate();
-              }
 
               // reset the cart
               cartItemList.removeAllElements();
@@ -382,10 +379,47 @@ public class Application1 {
               cartLabel.setText("Shopping Cart(0)");
 
               itemCount = 0;
-              // reset the item count
+
+              // for each item in the cart, update the product quantity in the products.txt
+              // file
+              for (int i = 0; i < saleHistoryItemList.size(); i++) {
+                CartItem a = (CartItem) saleHistoryItemList.elementAt(i);
+                // find the corresponding product in the products list
+                Vector products = productReader.readProductsFromFile("data/products.txt");
+                int j;
+                for (j = 0; j < products.size(); j++) {
+                  ProductItem p = (ProductItem) products.elementAt(j);
+                  if (p.name.equals(a.name)) {
+                    // update the quantity
+                    int newQuantity = p.inStore - a.quantity;
+                    if (newQuantity < 0) {
+                      // if quantity is 0
+                      newQuantity = 0;
+                      // show a warning message
+                      JOptionPane.showMessageDialog(checkoutFrame,
+                          "Not enough in stock for " + p.name + ". .", "Stock Warning",
+                          JOptionPane.WARNING_MESSAGE);
+                    } else
+                      productWriter.changeQuantity(p.productID, newQuantity);
+
+                    break;
+                  }
+                }
+              }
+              // reset the product panel
+              productPanel.removeAll();
+              Vector products = productReader.readProductsFromFile("data/products.txt");
+              for (int i = 0; i < products.size(); i++) {
+                ProductItem p = (ProductItem) products.elementAt(i);
+                JPanel itemPanel = p.createProductPanel(p);
+                productPanel.add(itemPanel);
+              }
+              // repaint the product panel
+              productPanel.revalidate();
+              productPanel.repaint();
+              checkoutFrame.dispose();
             }
-
-
+          }
         });
 
         // add buy now button to the bottom of the checkout panel
@@ -400,7 +434,6 @@ public class Application1 {
         historyPanel.add(Box.createRigidArea(new Dimension(0, 6)));
 
         // add all existing orders
-
 
         historyPanel.revalidate();
         historyPanel.repaint();
@@ -440,22 +473,22 @@ public class Application1 {
 
   public static void addToCart(String name, double price, int quantity) {
     /*
-    for (int i = 0; i < cartItemList.size();) {
-      //find cart item number for each product
-      CartItem ci= (CartItem) cartItemList.elementAt(i);
-      if (ci.name.equals(name)) {
-        //add the quaty to how much much product
-        ci.quantity += quantity;
-        //refresh labels
-        //cartLabelRef.setText("Shopping Cart(" + cartItemList.size() + ")");
-        totalLabelRef.setText("Total: $" + calculatetotal());
-        cartPanelRef.validate();
-        cartPanelRef.repaint();
-        i = i + 1;
-        return;
-      }
-    }
-    */
+     * for (int i = 0; i < cartItemList.size();) {
+     * //find cart item number for each product
+     * CartItem ci= (CartItem) cartItemList.elementAt(i);
+     * if (ci.name.equals(name)) {
+     * //add the quaty to how much much product
+     * ci.quantity += quantity;
+     * //refresh labels
+     * //cartLabelRef.setText("Shopping Cart(" + cartItemList.size() + ")");
+     * totalLabelRef.setText("Total: $" + calculatetotal());
+     * cartPanelRef.validate();
+     * cartPanelRef.repaint();
+     * i = i + 1;
+     * return;
+     * }
+     * }
+     */
     // create a new cart item and add it to the list
     final CartItem newItem = new CartItem(name, price, quantity);
     cartItemList.addElement(newItem);
@@ -577,7 +610,7 @@ class ProductItem {
     nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     // text
-    JLabel textLabel = new JLabel(" - $" + price);
+    JLabel textLabel = new JLabel("In Stock: " + inStore + " - $" + price);
     textLabel.setFont(new Font("Serif", Font.PLAIN, 14));
 
     // scale cart to 10% of the product

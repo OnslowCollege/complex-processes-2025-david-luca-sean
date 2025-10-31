@@ -1,3 +1,5 @@
+//package Checkout;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -11,7 +13,7 @@ public class TransactionPage {
     JTable table;
     DefaultTableModel model;
 
-    //master data
+    //data
     Vector allRows = new Vector();
 
     //filters
@@ -161,9 +163,7 @@ public class TransactionPage {
         }
     }
 
-    // ================================================================
 // Load all transactions from TXT file (semicolon-separated)
-// ================================================================
     public void loadFromTxt(String path) {
         File f = new File(path);
         if (!f.exists() || !f.isFile()) return;
