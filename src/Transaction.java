@@ -9,6 +9,10 @@ public class Transaction {
     private Date when;
     private Vector items;
 
+    public Enumeration getItems() {
+        return items.elements();
+    }
+
     private static final  SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd  HH:mm");
     final DecimalFormat Money = new DecimalFormat("");
 

@@ -60,35 +60,16 @@ public class Application1 {
     JLabel headerLabel = new JLabel(" SIGMABUSTER VIDEO");
     headerLabel.setForeground(Color.yellow); // set text color to yellow
     headerLabel.setFont(new Font("Serif", Font.BOLD, 35));
-    headerPanel.add(new Searchbar(), BorderLayout.EAST);
+    //headerPanel.add(new Searchbar(), BorderLayout.EAST);
     final JButton transactionButton = new JButton("Transaction");
     headerPanel.add(transactionButton, BorderLayout.EAST);
     transactionButton.setFont(new Font("Serif", Font.BOLD, 15));
+    TransactionPage transactionPage=new TransactionPage();
     transactionButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        JFrame transactionFrame = new JFrame("Transactions");
-        transactionFrame.getContentPane().setLayout(new BorderLayout());
-        java.awt.Dimension scr = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        int w = (scr.width * 5) / 10;
-        int h = (scr.height * 5) / 10;
-        transactionFrame.setSize(w, h);
 
-        JPanel transactionFrameHeaderPanel = new JPanel();
-        transactionFrameHeaderPanel.setBackground(Color.blue);
-
-        JLabel transactionFrameHeaderLabel = new JLabel("SIGMABUSTER transaction hisory");
-        transactionFrameHeaderLabel.setForeground(Color.yellow);
-        transactionFrameHeaderLabel.setFont(new Font("Serif", Font.BOLD, 27));
-        
-        transactionFrame.setSize(560, 400);
-        transactionFrame.getContentPane().setLayout(new BorderLayout());
-        transactionFrame.getContentPane().add(new JScrollPane(new JTextArea()), BorderLayout.CENTER);
-
-        transactionFrame.setVisible(true);
-        transactionFrameHeaderPanel.setLayout(new BorderLayout());
-        transactionFrameHeaderPanel.add(transactionFrameHeaderLabel, BorderLayout.WEST);
-        transactionFrame.getContentPane().add(transactionFrameHeaderPanel, BorderLayout.NORTH);
         // size the check out screen
+        transactionPage.show();
 
           }
 });
@@ -352,6 +333,7 @@ public class Application1 {
               for(int f= 0; f<cartItemList.size();f++){
                 t.addItem((CartItem)cartItemList.elementAt(f));
               }
+              transactionPage.addTransaction(t);
               //record of sale history
               Vector saleHistoryItemList = new Vector();
               for (int i = 0; i < cartItemList.size(); i++) {
@@ -374,13 +356,17 @@ public class Application1 {
                 for (int i = 0; i < items.size();) {
                   sb.append(" • ").append(items.elementAt(i).toString()).append("\n");
                   i++;
+                  //add the time the order is maked
+                java.text.SimpleDateFormat eeee = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
+                sb.append("tim of purchase ").append(eeee.format(t.getWhen())).append("\n");
+                        
                 }
                 //to string to makesure it dosnt crash.
-                JTextArea area = new JTextArea(sb.toString());
-                area.setEditable(false);
-                area.setOpaque(false);
-                area.setFont(new Font("Serif", Font.PLAIN, 12));
-                historyPanel.add(area);
+              JTextArea area = new JTextArea(sb.toString());
+              area.setEditable(false);
+              area.setOpaque(false);
+              area.setFont(new Font("Serif", Font.PLAIN, 12));
+              historyPanel.add(area);
               }
 
               historyPanel.revalidate(); 
@@ -411,21 +397,7 @@ public class Application1 {
         historyPanel.add(Box.createRigidArea(new Dimension(0, 6)));
 
         // add all existing orders
-        for (Enumeration keys = saleHistory.keys(); keys.hasMoreElements();) {
-          Object key = keys.nextElement();
-          Vector items = (Vector) saleHistory.get(key);
-          StringBuffer sb = new StringBuffer();
-          sb.append(String.valueOf(key)).append("\n");
-          for (int i = 0; i < items.size(); i++) {
-            sb.append(" • ").append(items.elementAt(i).toString()).append("\n");
-          }
-          JTextArea area = new JTextArea(sb.toString());
-          area.setEditable(false);
-          area.setOpaque(false);
-          area.setFont(new Font("Serif", Font.PLAIN, 12));
-          historyPanel.add(area);
-          historyPanel.add(Box.createRigidArea(new Dimension(0, 8)));
-        }
+
 
         historyPanel.revalidate();
         historyPanel.repaint();
@@ -485,7 +457,7 @@ public class Application1 {
     final CartItem newItem = new CartItem(name, price, quantity);
     cartItemList.addElement(newItem);
 
-    // build a row for cart
+    //build a row for cart
     final JPanel itemPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
     itemPanel.setBackground(Color.lightGray);
     itemPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.black));
