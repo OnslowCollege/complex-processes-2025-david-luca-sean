@@ -22,7 +22,7 @@ public class Application1 {
   public static JLabel totalLabelRef;
   public static Component cartGlueRef;
 
-  public static int orderNumber = 1;
+  //public static int orderNumber = 1;
 
   // ArrayList to hold cart items
   public static Vector cartItemList = new Vector();
@@ -56,7 +56,7 @@ public class Application1 {
     JPanel headerPanel = new JPanel(new BorderLayout());
     headerPanel.setBackground(Color.blue);
     // Create a label for the header
-    
+
     JLabel headerLabel = new JLabel(" SIGMABUSTER VIDEO");
     headerLabel.setForeground(Color.yellow); // set text color to yellow
     headerLabel.setFont(new Font("Serif", Font.BOLD, 35));
@@ -73,7 +73,7 @@ public class Application1 {
 
           }
 });
-        //main 
+        //main
     // Add the label to the header panel
     frame.getContentPane().add(headerPanel, BorderLayout.NORTH);
     // align the text to the left
@@ -327,7 +327,11 @@ public class Application1 {
               cartPanel.add(Box.createVerticalGlue());
               cartPanel.add(totalLabel);
               cartPanel.add(checkoutButton);
-              
+
+
+              long time = System.currentTimeMillis();      // milliseconds since 1970
+              int orderNumber = (int)(Math.random() * 10000);
+
               Transaction t = new Transaction(orderNumber);
 
               for(int f= 0; f<cartItemList.size();f++){
@@ -341,7 +345,6 @@ public class Application1 {
               }
               String orderKey = "Order " + orderNumber + " - " + totalLabel.getText();
               saleHistory.put(orderKey, saleHistoryItemList);
-              orderNumber++;
               //clear old and rebuild the pannel
               historyPanel.removeAll();
               historyPanel.add(historyLabel);
@@ -359,7 +362,7 @@ public class Application1 {
                   //add the time the order is maked
                 java.text.SimpleDateFormat eeee = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
                 sb.append("tim of purchase ").append(eeee.format(t.getWhen())).append("\n");
-                        
+
                 }
                 //to string to makesure it dosnt crash.
               JTextArea area = new JTextArea(sb.toString());
@@ -369,7 +372,7 @@ public class Application1 {
               historyPanel.add(area);
               }
 
-              historyPanel.revalidate(); 
+              historyPanel.revalidate();
               }
 
               // reset the cart
@@ -381,7 +384,7 @@ public class Application1 {
               itemCount = 0;
               // reset the item count
             }
-          
+
 
         });
 
@@ -436,9 +439,9 @@ public class Application1 {
   }
 
   public static void addToCart(String name, double price, int quantity) {
-    /*  
+    /*
     for (int i = 0; i < cartItemList.size();) {
-      //find cart item number for each product 
+      //find cart item number for each product
       CartItem ci= (CartItem) cartItemList.elementAt(i);
       if (ci.name.equals(name)) {
         //add the quaty to how much much product
@@ -452,12 +455,12 @@ public class Application1 {
         return;
       }
     }
-    */ 
+    */
     // create a new cart item and add it to the list
     final CartItem newItem = new CartItem(name, price, quantity);
     cartItemList.addElement(newItem);
 
-    //build a row for cart
+    // build a row for cart
     final JPanel itemPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
     itemPanel.setBackground(Color.lightGray);
     itemPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.black));
