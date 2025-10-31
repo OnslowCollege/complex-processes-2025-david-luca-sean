@@ -1,20 +1,20 @@
 ProductID,name,price,inStore,imageName
 1,Starwars,20.0,10,starwars.jpg
-2,The Matrix,20.0,5,matrix.jpg
+2,The Matrix,20.0,4,matrix.jpg
 3,Borat,50.0,20,Borat.jpg
-4,Squidgame,30.0,30,squidgame.jpg
+4,Squidgame,30.0,29,squidgame.jpg
 5,Rush Hour, 10.0,10,rushhour.jpg
 6,Cars,10.0,10,cars.jpg
 7,M&M Cookie,2.50,50,apple.jpg
 8,Alien,10.0,5,alien.jpg
-9,Avatar,15.0,8,avatar.jpg
+9,Avatar,15.0,6,avatar.jpg
 10,Bolt,7.50,0,bolt.jpg
 11,Spiderman,12.50,7,spiderman.jpg
 12,Avatar,10.50,11,avatar.jpg
 13,Birdbox,6.70,8,birdbox.jpg
 14,Flash Gordan,18.50,3,flashgordon.jpg
-15,Hunter x Hunter,15.0,6,hunterhunter.jpg
-16,SandBlocks,10.0,72,sandblocks.jpg
+15,Hunter x Hunter,15.0,5,hunterhunter.jpg
+16,SandBlocks,10.0,60,sandblocks.jpg
 17,Black Mirror #1,12.99,13,shutup.jpg
 18,USS Callister,15.0,4,usscallister.jpg
 19,White Christmas,12.99,9,whitechristmas.jpg

@@ -1,4 +1,4 @@
-//mac os 9
+//windows 98
 //package Checkout;
 
 import javax.swing.*;
@@ -44,7 +44,7 @@ public class Application1 {
         System.exit(0);
       }
     });
-    frame.setSize(1000, 700);
+    frame.setSize(640, 480);
     // frame is divded into NORTH, SOUTH, EAST, WEST and CENTER
     frame.getContentPane().setLayout(new BorderLayout());
     // centre the frame on the screen
@@ -63,7 +63,7 @@ public class Application1 {
     final JButton transactionButton = new JButton("Transaction");
     headerPanel.add(transactionButton, BorderLayout.EAST);
     transactionButton.setFont(new Font("Serif", Font.BOLD, 15));
-    TransactionPage transactionPage = new TransactionPage();
+    final TransactionPage transactionPage = new TransactionPage();
     transactionButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
 
@@ -83,19 +83,19 @@ public class Application1 {
     // frame.getContentPane().add(headerPanel, BorderLayout.NORTH);
 
     // panel that I could add iamge
-    JPanel productPanel = new JPanel() {
+    final JPanel productPanel = new JPanel() {
 
     };
 
     // set up height for product panel
     int itemHeight = 250;
-    int itemsPerRow = 4;
+    int itemsPerRow = 2;
     int totalItems = productReader.readProductsFromFile("data/products.txt").size();
     int rows = (int) Math.ceil((double) totalItems / itemsPerRow);
     int panelHeight = rows * itemHeight;
 
     productPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-    productPanel.setPreferredSize(new Dimension(800, panelHeight));
+    productPanel.setPreferredSize(new Dimension(400, panelHeight));
     productPanel.setBackground(Color.lightGray);
 
     // add a vertical scroll
@@ -114,7 +114,7 @@ public class Application1 {
     int purchasenumber = 0;
 
     // adding products to the product panel
-    Vector products = productReader.readProductsFromFile("data/products.txt");
+    final Vector products = productReader.readProductsFromFile("data/products.txt");
     for (int i = 0; i < products.size(); i++) {
       ProductItem p = (ProductItem) products.elementAt(i);
       JPanel itemPanel = p.createProductPanel(p);
@@ -232,7 +232,7 @@ public class Application1 {
             checkoutFrame.dispose();
           }
         });
-        checkoutFrame.setSize(560, 400);
+        checkoutFrame.setSize(640, 480);
         checkoutFrame.getContentPane().setLayout(new BorderLayout());
         // size the check out screen
         java.awt.Dimension scr = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
@@ -245,7 +245,7 @@ public class Application1 {
         // Create a label for the header
         JLabel checkoutHeaderLabel = new JLabel(" SIGMABUSTER CHECKOUT");
         checkoutHeaderLabel.setForeground(Color.yellow); // set text color to yellow
-        checkoutHeaderLabel.setFont(new Font("Serif", Font.BOLD, 27));
+        checkoutHeaderLabel.setFont(new Font("Serif", Font.BOLD, 22));
         // Add the label to the header panel
         // align the text to the left
         checkoutHeaderPanel.setLayout(new BorderLayout());
@@ -327,7 +327,7 @@ public class Application1 {
               cartPanel.add(totalLabel);
               cartPanel.add(checkoutButton);
 
-              long time = System.currentTimeMillis();
+              long time = System.currentTimeMillis(); // milliseconds since 1970
               int orderNumber = (int) (Math.random() * 10000);
 
               Transaction t = new Transaction(orderNumber);
@@ -385,7 +385,7 @@ public class Application1 {
               for (int i = 0; i < saleHistoryItemList.size(); i++) {
                 CartItem a = (CartItem) saleHistoryItemList.elementAt(i);
                 // find the corresponding product in the products list
-                Vector products = productReader.readProductsFromFile("data/products.txt");
+                //Vector products = productReader.readProductsFromFile("data/products.txt");
                 int j;
                 for (j = 0; j < products.size(); j++) {
                   ProductItem p = (ProductItem) products.elementAt(j);
@@ -408,7 +408,7 @@ public class Application1 {
               }
               // reset the product panel
               productPanel.removeAll();
-              Vector products = productReader.readProductsFromFile("data/products.txt");
+              //Vector products = productReader.readProductsFromFile("data/products.txt");
               for (int i = 0; i < products.size(); i++) {
                 ProductItem p = (ProductItem) products.elementAt(i);
                 JPanel itemPanel = p.createProductPanel(p);
@@ -591,7 +591,7 @@ class ProductItem {
   /* method to create product panel to display */
   public JPanel createProductPanel(ProductItem product) {
     // create a new JPanel
-    JPanel subItemPanel = new JPanel();
+    final JPanel subItemPanel = new JPanel();
     subItemPanel.setLayout(new BoxLayout(subItemPanel, BoxLayout.Y_AXIS));
     subItemPanel.setBorder(BorderFactory.createLineBorder(Color.lightGray, 2));
 
@@ -637,7 +637,15 @@ class ProductItem {
 
     cartButtton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        Application1.addToCart(name, price, 1);
+        if (inStore <= 0) {
+          // if the product is out of stock, show a message
+          JOptionPane.showMessageDialog(subItemPanel, "This item, " + name + " is out of stock.", "Out of Stock",
+              JOptionPane.WARNING_MESSAGE);
+          return; // exit the action listener
+        } else {
+          // add item to cart
+          Application1.addToCart(name, price, 1);
+        }
       }
     });
 

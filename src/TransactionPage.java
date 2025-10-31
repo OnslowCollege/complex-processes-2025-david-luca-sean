@@ -249,10 +249,19 @@ public class TransactionPage {
             try{qty=((Integer)qObj).intValue();}catch(Exception ex){}
             //add the total quanity with one item
             totalQty+=qty;
-            try{
-                String s=String.valueOf(tObj).replace("$","").replace(",","");
-                totalMoney+=Double.valueOf(s).doubleValue();
-            }catch(Exception ex){}
+            try {
+                String s = String.valueOf(tObj);
+                StringBuffer sb = new StringBuffer();
+                for (int ii = 0; ii < s.length(); ii++) {
+                    char c = s.charAt(ii);
+                    if (c != '$' && c != ',') {
+                        sb.append(c);
+                    }
+                }
+                totalMoney += Double.valueOf(sb.toString()).doubleValue();
+            } catch (Exception ex) {
+            }
+            
         }
         //print out the total on pannel
         totalQtyLabel.setText("Total Qty: "+totalQty);
